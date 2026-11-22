@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#091522"><meta name="color-scheme" content="dark"><meta name="description" content="Portail médical LETHE — application roleplay adaptative"><title>LETHE v1.1.1 — Département médical</title>
+<style>
+:root{--bg:#08131f;--panel:#101f2e;--panel2:#15283a;--line:#294156;--txt:#e8f0f6;--muted:#91a7b9;--cyan:#64c6d5;--gold:#d5b36a;--red:#d96b6b;--green:#69bd91;--shadow:0 12px 32px #0005}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 20% -10%,#18344a 0,transparent 42%),var(--bg);color:var(--txt);font:14px/1.45 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+button,input,select,textarea{font:inherit}button{cursor:pointer}.hidden{display:none!important}
+.topbar{height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;border-bottom:1px solid var(--line);background:#08131feF;position:sticky;top:0;z-index:5;backdrop-filter:blur(12px)}
+.brand{display:flex;gap:11px;align-items:center;font-weight:800;letter-spacing:.16em}.sigil{width:34px;height:34px;border:1px solid var(--cyan);color:var(--cyan);display:grid;place-items:center;border-radius:9px;font-weight:900}
+.brand small{display:block;color:var(--muted);font-size:9px;letter-spacing:.2em;font-weight:600}
+.shell{display:grid;grid-template-columns:245px minmax(0,1fr);min-height:calc(100vh - 64px)}
+.sidebar{border-right:1px solid var(--line);padding:18px 12px;background:#0b1926}.side-label{color:#71899d;font-size:10px;letter-spacing:.18em;margin:14px 10px 7px}
+.nav{display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:8px;color:#b7c7d4;border:1px solid transparent;margin:3px 0;text-align:left;width:100%;background:transparent}
+.nav:hover,.nav.active{background:#193247;border-color:#31566d;color:white}.nav .ico{width:18px;color:var(--cyan);text-align:center}
+main{padding:24px;max-width:1500px;width:100%;margin:auto}.page-head{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;margin-bottom:22px}
+.eyebrow{color:var(--cyan);font-size:10px;letter-spacing:.22em;text-transform:uppercase}.page-head h1{font-size:25px;margin:4px 0 3px;letter-spacing:.02em}.sub{color:var(--muted);margin:0}
+.grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:14px}.card{background:linear-gradient(145deg,#132638,#0f1d2b);border:1px solid var(--line);border-radius:12px;padding:17px;box-shadow:var(--shadow);min-width:0}
+.span-3{grid-column:span 3}.span-4{grid-column:span 4}.span-6{grid-column:span 6}.span-8{grid-column:span 8}.span-12{grid-column:span 12}
+.stat{font-size:28px;font-weight:750;margin-top:5px}.muted{color:var(--muted)}.card h3{margin:0 0 12px;font-size:14px;letter-spacing:.04em}
+.btn{border:1px solid #426177;background:#1b3549;color:#eaf4fa;padding:9px 13px;border-radius:8px;font-weight:650}.btn:hover{background:#24475e}.btn.primary{background:#1d5967;border-color:#397f8c}.btn.gold{background:#57482c;border-color:#8b7442}.btn.danger{background:#542d35;border-color:#8e4a55}.btn.ghost{background:transparent}.btn.small{padding:6px 9px;font-size:12px}
+.actions{display:flex;gap:8px;flex-wrap:wrap}.field{display:flex;flex-direction:column;gap:5px;min-width:0}.field label{font-size:11px;color:#a9bdcc;letter-spacing:.06em;text-transform:uppercase}.field input,.field select,.field textarea,.search{width:100%;background:#091724;border:1px solid #314b60;border-radius:7px;color:var(--txt);padding:10px 11px;outline:none;min-width:0}.field textarea{min-height:88px;resize:vertical}.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--cyan);box-shadow:0 0 0 2px #64c6d522}
+.formgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.formgrid.three{grid-template-columns:repeat(3,minmax(0,1fr))}.formgrid.four{grid-template-columns:repeat(4,minmax(0,1fr))}
+.full{grid-column:1/-1}.section-title{display:flex;align-items:center;justify-content:space-between;margin:18px 0 10px;padding-bottom:8px;border-bottom:1px solid var(--line);color:var(--cyan);font-size:11px;letter-spacing:.15em;text-transform:uppercase}
+.tablewrap{overflow:auto}table{width:100%;border-collapse:collapse;min-width:600px}th,td{padding:10px;border-bottom:1px solid #263c4e;text-align:left}th{font-size:10px;color:#8da6b8;text-transform:uppercase;letter-spacing:.1em}td{font-size:13px}
+.tag{display:inline-flex;padding:3px 7px;border:1px solid #456176;border-radius:20px;color:#b8dce4;font-size:10px;white-space:nowrap}.tag.red{border-color:#9b4d58;color:#ffb0b0}.tag.gold{border-color:#8b7442;color:#e5cb8b}
+.notice{border-left:3px solid var(--gold);padding:10px 12px;background:#3b3221;color:#ead8ad;border-radius:4px;font-size:12px}
+.login{min-height:100vh;display:grid;place-items:center;padding:20px;background:radial-gradient(ellipse at 50% 0%,#1c3c50 0,transparent 55%),#07111c}
+.loginbox{width:min(430px,100%);padding:28px;background:#102131;border:1px solid #355267;border-radius:16px;box-shadow:0 25px 80px #0009}.loginbox .brand{justify-content:center;margin-bottom:25px}.loginbox h1{text-align:center;font-size:19px;letter-spacing:.13em}.loginbox p{text-align:center;color:var(--muted);font-size:12px}
+.mobilebar{display:none}.pill{border:1px solid var(--line);padding:5px 8px;border-radius:20px;color:var(--muted);font-size:11px}
+.tabs{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:14px}.tab{padding:8px 11px;background:#0b1926;border:1px solid var(--line);border-radius:7px;color:#a9bdcc}.tab.active{background:#1c4657;border-color:#4d8998;color:white}
+.checks{display:flex;flex-wrap:wrap;gap:8px}.check{display:inline-flex;gap:7px;align-items:center;padding:7px 9px;border:1px solid #2d4559;border-radius:7px;background:#0b1926;color:#c6d4de;font-size:12px}.check input{accent-color:#64c6d5}
+.letter-nav{display:flex;flex-direction:column;gap:5px;position:sticky;top:84px;align-self:start}.letter-nav button{width:44px;height:42px;border-radius:8px;border:1px solid var(--line);background:#0d1d2b;color:var(--cyan);font-weight:800}.letter-nav button.active{background:#1d5867;color:white}
+.bilan-layout{display:grid;grid-template-columns:52px minmax(0,1fr);gap:12px}.bodymap{display:grid;grid-template-columns:1fr 1fr;gap:10px}.bodymap .map{border:1px solid var(--line);border-radius:9px;padding:12px;text-align:center;min-height:170px;background:#0b1926}
+.bodymap button{margin:3px;padding:5px 7px;font-size:10px}
+footer{padding:25px;color:#60798d;text-align:center;font-size:10px}
+@media(max-width:900px){.shell{grid-template-columns:1fr}.sidebar{display:none}.mobilebar{display:flex;gap:6px;overflow:auto;padding:8px;background:#0b1926;border-bottom:1px solid var(--line);position:sticky;top:64px;z-index:4}.mobilebar .nav{white-space:nowrap;width:auto;margin:0;padding:8px 10px;font-size:12px}.span-3{grid-column:span 6}.span-4{grid-column:span 6}.span-8{grid-column:span 12}main{padding:16px}}
+@media(max-width:560px){.span-3,.span-4,.span-6{grid-column:span 12}.formgrid,.formgrid.three,.formgrid.four{grid-template-columns:1fr}.page-head{flex-direction:column}.page-head h1{font-size:21px}.topbar{height:58px}.mobilebar{top:58px}.bilan-layout{grid-template-columns:1fr}.letter-nav{position:static;flex-direction:row;overflow:auto}.letter-nav button{min-width:40px}.bodymap{grid-template-columns:1fr 1fr}}
+@media print{body{background:white;color:#111}.topbar,.sidebar,.mobilebar,.no-print,button{display:none!important}.shell{display:block}main{padding:0;max-width:none}.card{background:white;color:#111;border:1px solid #aaa;box-shadow:none;break-inside:avoid}.field label,.muted,.sub{color:#333}.field input,.field textarea,.field select{background:white;color:#111;border:1px solid #999}.tag{color:#111;border-color:#777}.page-head h1{color:#111}}
+
+/* Interface adaptative : mobile / tablette / ordinateur */
+html{scroll-behavior:smooth}body{min-width:300px}button,input,select,textarea{touch-action:manipulation}
+:focus-visible{outline:3px solid var(--cyan)!important;outline-offset:3px}
+.skip-link{position:absolute;top:-100px;left:12px;z-index:50;background:var(--cyan);color:#08131f;padding:12px;border-radius:8px}.skip-link:focus{top:10px}
+#deviceLabel{color:var(--muted);font-size:11px;white-space:nowrap}
+.device-controls{display:flex;align-items:center;gap:7px}.device-controls select{max-width:116px;background:#10283a;color:var(--txt);border:1px solid var(--line);border-radius:7px;padding:7px}
+#mobileNav{scrollbar-width:thin;scroll-snap-type:x proximity}#mobileNav .nav{scroll-snap-align:start}
+#mobileNav .nav.active{border-bottom:2px solid var(--cyan)}
+.card{transition:border-color .15s ease}.card:hover{border-color:#3b5b70}
+#content{animation:appear .15s ease}@keyframes appear{from{opacity:.7;transform:translateY(3px)}to{opacity:1;transform:translateY(0)}}
+.toast{position:fixed;right:16px;bottom:18px;z-index:99;background:#183a45;border:1px solid #5d9ea9;padding:12px 16px;border-radius:10px;box-shadow:var(--shadow);max-width:min(400px,90vw)}
+@media(min-width:901px) and (max-width:1199px){.shell{grid-template-columns:205px minmax(0,1fr)}main{padding:19px}.sidebar{padding:14px 8px}.nav{padding:10px 8px}}
+@media(min-width:561px) and (max-width:900px){main{padding:20px}.formgrid.four{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){
+ body{font-size:14px}.topbar{padding:0 10px;gap:8px}.topbar .brand{letter-spacing:.07em;font-size:12px}.topbar .brand small{font-size:7px}
+ .topbar .pill{display:none}.topbar .actions{gap:5px}.device-controls select{max-width:83px;font-size:11px;padding:6px 3px}
+ .mobilebar{padding:7px 8px;gap:5px}.mobilebar .nav{min-height:42px;padding:9px 11px}
+ main{padding:12px}.card{padding:13px;border-radius:10px}.page-head{margin-bottom:14px}
+ .btn{min-height:40px}.btn.small{min-height:36px}.actions{gap:7px}
+ .formgrid{gap:10px}.field input,.field select,.field textarea{font-size:16px}
+ .tablewrap{margin-inline:-7px}table{min-width:560px}
+ .loginbox{padding:20px}.bodymap{grid-template-columns:1fr}
+ .toast{left:10px;right:10px;bottom:12px}
+}
+@media(max-width:390px){.topbar .brand small{display:none}.sigil{width:29px;height:29px}.device-controls select{max-width:72px}}
+@media(hover:none){.nav,.btn{min-height:42px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+body[data-layout="mobile"] .shell,body[data-layout="tablet"] .shell{grid-template-columns:1fr}
+body[data-layout="mobile"] .sidebar,body[data-layout="tablet"] .sidebar{display:none}
+body[data-layout="mobile"] .mobilebar,body[data-layout="tablet"] .mobilebar{display:flex}
+body[data-layout="mobile"] .formgrid,body[data-layout="mobile"] .formgrid.three,body[data-layout="mobile"] .formgrid.four{grid-template-columns:1fr}
+body[data-layout="mobile"] .span-3,body[data-layout="mobile"] .span-4,body[data-layout="mobile"] .span-6,body[data-layout="tablet"] .span-3{grid-column:span 12}
+body[data-layout="mobile"] main{max-width:620px;padding:12px}
+body[data-layout="tablet"] main{max-width:1000px}
+@media print{.device-controls,.toast,.skip-link{display:none!important}}
+
+/* LETHE ergonomie */
+:root{--scale:1}body{font-size:calc(14px * var(--scale))}body[data-font="large"]{--scale:1.16}body[data-font="extra"]{--scale:1.3}
+body[data-contrast="high"]{--muted:#e1e9f0;--line:#7697ac;--cyan:#a5f5ff;--txt:#fff}
+body[data-density="compact"] .card{padding:10px}body[data-density="compact"] td,body[data-density="compact"] th{padding:5px}body[data-density="compact"] .nav{padding:7px}
+body[data-density="comfortable"] .card{padding:23px}body[data-density="comfortable"] .nav{padding:15px}
+#uxBar{display:flex;align-items:center;gap:7px;flex-wrap:wrap;padding:9px;margin:0 0 15px;background:#10283a;border:1px solid var(--line);border-radius:9px}
+#uxBar button,#uxBar select{background:#1b394d;color:var(--txt);border:1px solid var(--line);border-radius:7px;padding:8px;min-height:37px}
+#uxBar .grow{flex:1}#uxBar button[aria-pressed="true"]{border-color:var(--cyan);color:var(--cyan)}
+#uxCrumb{color:var(--muted);font-size:12px;margin-bottom:8px}#uxCrumb button{color:var(--cyan);background:none;border:0;cursor:pointer}
+#uxHelp{background:#143247;border:1px solid var(--line);border-radius:8px;padding:12px;margin-bottom:12px}#uxHelp[hidden]{display:none}
+#patientCount{font-size:12px;color:var(--muted);margin:8px 0}#uxBar select{max-width:150px}
+.nav[aria-current="page"]{box-shadow:inset 3px 0 var(--cyan)}.ux-star{color:var(--gold)}
+.field input:focus-visible,.field select:focus-visible,.field textarea:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+@media(max-width:600px){#uxBar{padding:7px;gap:5px}#uxBar button,#uxBar select{font-size:11px;padding:6px;min-height:42px}#uxBar select{max-width:100px}}
+@media print{#uxBar,#uxHelp,#uxCrumb{display:none!important}}
+</style>
+<meta name="application-name" content="LETHE v1.1.1"><meta name="description" content="LETHE v1.1.1 — Portail médical de simulation RP, fichier HTML autonome."></head>
+<body><a class="skip-link" href="#main">Aller au contenu</a>
+<div id="loginScreen" class="login">
+ <div class="loginbox">
+  <div class="brand"><div class="sigil">L</div><div>LETHE<small>DÉPARTEMENT MÉDICAL</small></div></div>
+  <div class="eyebrow" style="text-align:center">SYSTÈME INTERNE · ACCÈS CONTRÔLÉ</div>
+  <h1>AUTHENTIFICATION REQUISE</h1><p>Veuillez présenter vos identifiants d'habilitation.</p>
+  <form id="loginForm" class="formgrid" style="grid-template-columns:1fr;margin-top:22px">
+   <div class="field"><label>Identifiant</label><input id="loginUser" autocomplete="username" required></div>
+   <div class="field"><label>Mot de passe</label><input id="loginPass" type="password" autocomplete="current-password" required></div>
+   <div class="full"><button class="btn primary" style="width:100%">Ouvrir la session</button></div>
+   <div id="loginError" class="full" style="color:#ff9b9b;text-align:center"></div>
+  </form>
+  <p style="margin-top:20px">LETHE // Réseau local de l'établissement</p>
+ </div>
+</div>
+<div id="app" class="hidden">
+<header class="topbar"><div class="brand"><div class="sigil">L</div><div>LETHE<small>DÉPARTEMENT MÉDICAL</small></div></div><div class="actions"><span class="pill" id="whoami"></span><div class="device-controls"><select id="layoutChoice" aria-label="Version de l’interface" onchange="setLayout(this.value)" title="Choisir une version d’affichage"><option value="auto">Auto</option><option value="desktop">PC</option><option value="tablet">Tablette</option><option value="mobile">Mobile</option></select></div><button class="btn small ghost" onclick="logout()">Déconnexion</button></div></header>
+<div class="mobilebar" id="mobileNav"></div>
+<div class="shell"><aside class="sidebar" id="sideNav"></aside><main id="main" tabindex="-1"></main></div>
+<footer>LETHE · SYSTÈME DE GESTION INTERNE · ENVIRONNEMENT ROLEPLAY</footer>
+</div>
+<script>
+const $=s=>document.querySelector(s), esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const read=(k,d=[])=>{try{return JSON.parse(localStorage.getItem('lethe_'+k))??d}catch{return d}}, write=(k,v)=>localStorage.setItem('lethe_'+k,JSON.stringify(v));
+let users=read('users',[{id:1,user:'admin',pass:'LETHE-DEMO-2026',name:'Administrateur LETHE',role:'Administrateur'}]);
+let patients=read('patients',[]), appointments=read('appointments',[]), pecs=read('pecs',[]), notifications=read('notifications',[]);
+let current=null, page='home', activeBilan='CI', activePEC=null;
+
+const layoutPreferenceKey='lethe_layout_preference';
+function setLayout(mode){
+ const value=['auto','desktop','tablet','mobile'].includes(mode)?mode:'auto';
+ document.body.dataset.layout=value;
+ localStorage.setItem(layoutPreferenceKey,value);
+ const select=$('#layoutChoice');if(select)select.value=value;
+}
+function initLayout(){setLayout(localStorage.getItem(layoutPreferenceKey)||'auto')}
+function notify(message){
+ let old=$('#letheToast');if(old)old.remove();
+ const box=document.createElement('div');box.id='letheToast';box.className='toast';box.setAttribute('role','status');box.textContent=message;document.body.appendChild(box);
+ setTimeout(()=>{if(box.isConnected)box.remove()},3500);
+}
+function exportBackup(){
+ if(!current)return;
+ const data={version:2,exportedAt:new Date().toISOString(),patients,appointments,pecs,notifications,auditLog};
+ const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+ const url=URL.createObjectURL(blob),a=document.createElement('a');
+ a.href=url;a.download='LETHE_sauvegarde_RP_'+new Date().toISOString().slice(0,10)+'.json';a.click();
+ setTimeout(()=>URL.revokeObjectURL(url),1000);notify('Sauvegarde exportée sur cet appareil.');
+}
+function importBackup(event){
+ if(!canAdmin())return;
+ const file=event.target.files?.[0];if(!file)return;
+ file.text().then(text=>{
+  const data=JSON.parse(text);
+  if(!Array.isArray(data.patients)||!Array.isArray(data.appointments)||!Array.isArray(data.pecs)||!Array.isArray(data.notifications))throw Error('Format invalide');
+  if(!confirm('Remplacer les dossiers, rendez-vous, PEC et notifications locaux par cette sauvegarde ?'))return;
+  patients=data.patients;appointments=data.appointments;pecs=data.pecs;notifications=data.notifications;
+  saveAll();if(Array.isArray(data.auditLog)){auditLog=data.auditLog;write('auditLog',auditLog)}go('home');notify('Sauvegarde restaurée.');
+ }).catch(()=>alert('Fichier de sauvegarde invalide.')).finally(()=>{event.target.value=''});
+}
+document.addEventListener('keydown',event=>{
+ if((event.ctrlKey||event.metaKey)&&event.key.toLowerCase()==='k'&&current){
+  event.preventDefault();go('patients');$('#patientSearch')?.focus();
+ }
+ if(event.key==='Escape'&&$('#symptomInput')===document.activeElement){$('#symptomInput').blur()}
+});
+
+// Ergonomie : préférences, favoris, historique et raccourcis.
+const UX_STORAGE='lethe_ergonomie_20';
+let uxPrefs={font:'normal',contrast:'normal',density:'normal',favorites:[],recent:[],help:false,...JSON.parse(localStorage.getItem(UX_STORAGE)||'{}')};
+let uxBackStack=[];
+function uxSave(){localStorage.setItem(UX_STORAGE,JSON.stringify(uxPrefs))}
+function uxApply(){document.body.dataset.font=uxPrefs.font;document.body.dataset.contrast=uxPrefs.contrast;document.body.dataset.density=uxPrefs.density}
+function uxSet(key,value){uxPrefs[key]=value;uxSave();uxApply();uxRenderBar();}
+function uxFav(){uxPrefs.favorites=uxPrefs.favorites.includes(page)?uxPrefs.favorites.filter(x=>x!==page):[...uxPrefs.favorites,page];uxSave();renderNav();uxRenderBar()}
+function uxBack(){const previous=uxBackStack.pop();go(previous||'home',true)}
+function uxRenderBar(){
+ const bar=$('#uxBar');if(!bar)return;
+ const allowed=navItems.filter(([id])=>(id!=='profiles'||canAdmin())&&(id!=='audit'||canSeeAudit())&&(!['medications','diagnostics'].includes(id)||canDoctor()));
+ bar.innerHTML=`<button onclick="uxBack()" title="Revenir à la page précédente">← Retour</button><button onclick="go('home')">⌂ Accueil</button><button onclick="uxFav()" aria-pressed="${uxPrefs.favorites.includes(page)}" title="Ajouter aux favoris">${uxPrefs.favorites.includes(page)?'★':'☆'} Favori</button><select aria-label="Accès rapide" onchange="if(this.value)go(this.value)"><option value="">Aller à…</option>${allowed.map(([id,ic,n])=>`<option value="${id}">${uxPrefs.favorites.includes(id)?'★ ':''}${n}</option>`).join('')}</select><span class="grow"></span><select aria-label="Taille du texte" onchange="uxSet('font',this.value)"><option value="normal" ${uxPrefs.font==='normal'?'selected':''}>Texte normal</option><option value="large" ${uxPrefs.font==='large'?'selected':''}>Texte +</option><option value="extra" ${uxPrefs.font==='extra'?'selected':''}>Texte ++</option></select><button aria-pressed="${uxPrefs.contrast==='high'}" onclick="uxSet('contrast',uxPrefs.contrast==='high'?'normal':'high')">◐ Contraste</button><select aria-label="Densité de l'interface" onchange="uxSet('density',this.value)"><option value="normal" ${uxPrefs.density==='normal'?'selected':''}>Standard</option><option value="compact" ${uxPrefs.density==='compact'?'selected':''}>Compact</option><option value="comfortable" ${uxPrefs.density==='comfortable'?'selected':''}>Espacé</option></select><button aria-expanded="${uxPrefs.help}" onclick="uxSet('help',!uxPrefs.help)">? Aide</button>`;
+ const help=$('#uxHelp');if(help){help.hidden=!uxPrefs.help;help.innerHTML='<b>Raccourcis</b><p>Ctrl/⌘ + K : dossiers patients · Alt + ← : page précédente · Alt + H : accueil · Échap : quitter la recherche.</p><p>Les préférences sont mémorisées sur cet appareil.</p>'}
+}
+function uxDecorate(){
+ const main=$('#main'),head=main?.querySelector('.page-head');if(!head)return;
+ const crumb=document.createElement('div');crumb.id='uxCrumb';crumb.innerHTML=`<button onclick="go('home')">Accueil</button> / ${esc(head.querySelector('h1')?.textContent||'')}`;head.before(crumb);
+ const bar=document.createElement('div');bar.id='uxBar';bar.setAttribute('role','toolbar');bar.setAttribute('aria-label','Outils de navigation et accessibilité');head.after(bar);
+ const help=document.createElement('div');help.id='uxHelp';help.hidden=true;bar.after(help);
+ uxRenderBar();document.title='LETHE · '+(head.querySelector('h1')?.textContent||'Département médical');window.scrollTo(0,0);
+}
+document.addEventListener('keydown',event=>{if(!current)return;if(event.altKey&&event.key==='ArrowLeft'){event.preventDefault();uxBack()}if(event.altKey&&event.key.toLowerCase()==='h'){event.preventDefault();go('home')}if(event.key==='Escape'&&['INPUT','TEXTAREA'].includes(document.activeElement?.tagName))document.activeElement.blur()});
+uxApply();
+
+const roles=['Direction','Superviseur','Médecin','Infirmier','Interne','Pharmacien'];
+const canAdmin=()=>current?.role==='Administrateur';
+const canDoctor=()=>current?.role==='Médecin'||canAdmin();
+const canRecordMedication=()=>['Administrateur','Médecin','Infirmier'].includes(current?.role);
+const canPrescribe=()=>['Administrateur','Médecin'].includes(current?.role);
+const canPharmacy=()=>['Administrateur','Pharmacien'].includes(current?.role);
+const canDeletePatient=()=>['Administrateur','Direction','Superviseur'].includes(current?.role);
+
+const canManage=()=>['Administrateur','Direction','Superviseur'].includes(current?.role);
+const canEditPatient=()=>['Administrateur','Direction','Superviseur','Médecin','Infirmier'].includes(current?.role);
+const canCare=()=>['Administrateur','Médecin','Infirmier','Interne'].includes(current?.role);
+const canUrgentClose=()=>['Administrateur','Direction','Superviseur','Médecin'].includes(current?.role);
+const canSeeAudit=canManage;
+const navItems=[['home','⌂','Accueil'],['patients','▤','Dossiers patients'],['appointments','◷','Rendez-vous'],['pec','✚','Prises en charge'],['urgent','⚑','PEC urgente'],['medications','◈','Médicaments'],['diagnostics','⌕','Recherche symptômes'],['profiles','♙','Profils & accès'],['notifications','◉','Notifications'],['audit','▣','Journal & régulation']];
+
+let auditLog=read('auditLog',[]);
+let auditPrevious={patients:JSON.stringify(patients),pecs:JSON.stringify(pecs),appointments:JSON.stringify(appointments)};
+function auditEvent(action,type,id,detail){
+ if(!current)return;
+ auditLog.push({id:Date.now()+Math.random(),at:new Date().toISOString(),actorId:current.id,actor:current.name,role:current.role,action,type,recordId:id,detail});
+ if(auditLog.length>3000)auditLog=auditLog.slice(-3000);
+ write('auditLog',auditLog);
+}
+function auditChanges(type,before,after){
+ const old=new Map(before.map(x=>[String(x.id),x]));
+ const fresh=new Map(after.map(x=>[String(x.id),x]));
+ for(const [id,obj] of fresh){
+  const prev=old.get(id);
+  if(!prev){auditEvent('Création',type,id,type==='PEC'?(obj.urgent?'Prise en charge urgente':'Prise en charge standard'):'Nouvelle fiche');continue}
+  const ignored=['updatedAt','lastModified'];
+  const fields=[...new Set([...Object.keys(prev),...Object.keys(obj)])].filter(k=>!ignored.includes(k)&&JSON.stringify(prev[k])!==JSON.stringify(obj[k]));
+  if(fields.length)auditEvent('Modification',type,id,'Champs modifiés : '+fields.join(', ').slice(0,360));
+ }
+ for(const [id] of old)if(!fresh.has(id))auditEvent('Suppression',type,id,'Enregistrement supprimé');
+}
+function saveAll(){
+ for(const [key,type] of [['patients','Patient'],['pecs','PEC'],['appointments','Rendez-vous']]){
+  const before=JSON.parse(auditPrevious[key]||'[]'),after=({patients,pecs,appointments})[key];
+  auditChanges(type,before,after);
+  auditPrevious[key]=JSON.stringify(after);
+ }
+ write('users',users);write('patients',patients);write('appointments',appointments);write('pecs',pecs);write('notifications',notifications);
+}
+function auditForPEC(id){return auditLog.filter(x=>x.type==='PEC'&&String(x.recordId)===String(id))}
+function auditTable(events){
+ return `<div class="tablewrap"><table><thead><tr><th>Horodatage</th><th>Agent</th><th>Accréditation</th><th>Action</th><th>Détails</th></tr></thead><tbody>${events.map(e=>`<tr><td>${esc(new Date(e.at).toLocaleString('fr-FR'))}</td><td>${esc(e.actor)}</td><td>${esc(e.role)}</td><td>${esc(e.action)}</td><td>${esc(e.detail)}</td></tr>`).join('')||'<tr><td colspan="5">Aucun événement enregistré.</td></tr>'}</tbody></table></div>`;
+}
+function auditPage(){
+ if(!canSeeAudit()){go('home');return}
+ $('#content').innerHTML=`<div class="card"><h3>JOURNAL DE RÉGULATION</h3><p class="muted">Traçabilité locale des modifications, suppressions et créations. Les opérations antérieures à cette version ne peuvent pas être reconstituées.</p><div class="formgrid"><div class="field"><label>Rechercher un agent, une action ou un identifiant</label><input id="auditSearch" oninput="renderAudit()" placeholder="Nom, rôle, PEC, identifiant…"></div><div class="field"><label>Type d'enregistrement</label><select id="auditType" onchange="renderAudit()"><option value="">Tous</option><option>PEC</option><option>Patient</option><option>Rendez-vous</option><option>Accès</option></select></div></div><p id="auditCount" class="muted"></p><div id="auditResults"></div></div>`;
+ renderAudit();
+}
+function renderAudit(){
+ if(!canSeeAudit())return;
+ const q=normalizeSearch($('#auditSearch')?.value||''),type=$('#auditType')?.value||'';
+ const events=auditLog.filter(x=>(!type||x.type===type)&&(!q||normalizeSearch([x.actor,x.role,x.action,x.type,x.recordId,x.detail].join(' ')).includes(q))).slice().reverse();
+ $('#auditCount').textContent=events.length+' événement(s) trouvé(s), '+Math.min(200,events.length)+' affiché(s).';
+ $('#auditResults').innerHTML=auditTable(events.slice(0,200));
+}
+function pecAuditSection(id){
+ if(!canSeeAudit())return '';
+ return `<div class="card" style="margin-top:12px"><h3>HISTORIQUE DES INTERVENTIONS ET MODIFICATIONS</h3><p class="muted">Qui a effectué quelle modification sur cette prise en charge.</p>${auditTable(auditForPEC(id).slice().reverse())}</div>`;
+}
+
+function login(u,p){let x=users.find(a=>a.user===u&&a.pass===p);if(!x)return false;current=x;auditEvent('Connexion','Accès',x.id,'Ouverture de session');sessionStorage.setItem('lethe_session',String(x.id));return true}
+$('#loginForm').addEventListener('submit',e=>{e.preventDefault();if(login($('#loginUser').value.trim(),$('#loginPass').value))showApp();else $('#loginError').textContent='Identifiants invalides ou habilitation inconnue.'});
+function logout(){auditEvent('Déconnexion','Accès',current?.id||0,'Fermeture de session');current=null;sessionStorage.removeItem('lethe_session');$('#app').classList.add('hidden');$('#loginScreen').classList.remove('hidden')}
+function showApp(){ uxApply();initLayout();$('#loginScreen').classList.add('hidden');$('#app').classList.remove('hidden');$('#whoami').textContent=current.name+' · '+current.role;renderNav();go('home')}
+function renderNav(){let html=navItems.filter(([id])=>(id!=='profiles'||canAdmin())&&(id!=='audit'||canSeeAudit())&&(!['medications','diagnostics'].includes(id)||canDoctor() )).sort((a,b)=>Number(uxPrefs.favorites.includes(b[0]))-Number(uxPrefs.favorites.includes(a[0]))).map(([id,ic,n])=>`<button class="nav ${page===id?'active':''}" aria-current="${page===id?'page':'false'}" onclick="go('${id}')"><span class="ico">${ic}</span>${uxPrefs.favorites.includes(id)?'★ ':''}${n}</button>`).join('');$('#sideNav').innerHTML='<div class="side-label">NAVIGATION</div>'+html+'<div class="side-label">SESSION</div><div style="padding:10px;color:#71899d;font-size:11px">Habilitation : '+esc(current.role)+'</div>';$('#mobileNav').innerHTML=html}
+function go(p,fromBack=false){if((['medications','diagnostics'].includes(p)&&!canDoctor())||(p==='profiles'&&!canAdmin())||(p==='audit'&&!canSeeAudit())||(p==='urgent'&&!canCare())){p='home'}if(!fromBack&&page!==p)uxBackStack.push(page);page=p;uxPrefs.recent=[p,...uxPrefs.recent.filter(x=>x!==p)].slice(0,5);uxSave();renderNav();let titles={home:'Vue d’ensemble',patients:'Dossiers de suivi',appointments:'Gestion des rendez-vous',pec:'Prises en charge médicales',urgent:'Prise en charge urgente',profiles:'Administration des profils',notifications:'Centre de notifications',medications:'Référentiel des médicaments',diagnostics:'Recherche de symptômes',audit:'Journal de régulation'};$('#main').innerHTML=`<div class="page-head"><div><div class="eyebrow">LETHE / DÉPARTEMENT MÉDICAL</div><h1>${titles[p]}</h1><p class="sub">Système interne de suivi et de coordination médicale.</p></div><span class="tag">${esc(current.role)}</span></div><div id="content"></div>`;({home:homePage,patients:patientsPage,appointments:appointmentsPage,pec:pecPage,urgent:urgentPage,profiles:profilesPage,notifications:notificationsPage,medications:medicationsPage,diagnostics:diagnosticsPage,audit:auditPage}[p]||homePage)();uxDecorate()}
+function homePage(){let c=$('#content');c.innerHTML=`<div class="grid">
+<div class="card span-3"><div class="muted">DOSSIERS PATIENTS</div><div class="stat">${patients.length}</div><span class="tag">Référentiel</span></div>
+<div class="card span-3"><div class="muted">RENDEZ-VOUS</div><div class="stat">${appointments.length}</div><span class="tag">Planification</span></div>
+<div class="card span-3"><div class="muted">PRISES EN CHARGE</div><div class="stat">${pecs.length}</div><span class="tag">Registre médical</span></div>
+<div class="card span-3"><div class="muted">ALERTES NON LUES</div><div class="stat">${notifications.length}</div><span class="tag gold">Coordination</span></div>
+<div class="card span-8"><h3>ACCÈS RAPIDE</h3><div class="actions"><button class="btn primary" onclick="go('patients')">＋ Nouveau dossier patient</button><button class="btn" onclick="go('appointments')">＋ Rendez-vous</button><button class="btn" onclick="go('pec')">＋ Prise en charge</button><button class="btn danger" onclick="go('urgent')">＋ PEC urgente</button></div></div>
+<div class="card span-4"><h3>SESSION ACTIVE</h3><p><b>${esc(current.name)}</b></p><p class="muted">Profil : ${esc(current.role)}</p><p class="muted">Les habilitations déterminent les actions disponibles.</p></div>
+<div class="card span-12"><h3>OUTILS & SAUVEGARDE LOCALE</h3><p class="muted">L'affichage s'adapte automatiquement à l'écran. Vous pouvez également forcer la version PC, tablette ou mobile dans la barre supérieure.</p><div class="actions"><button class="btn" onclick="exportBackup()">Exporter les données RP (JSON)</button>${canAdmin()?`<label class="btn" style="cursor:pointer">Restaurer une sauvegarde <input type="file" accept=".json,application/json" style="display:none" onchange="importBackup(event)"></label>`:''}</div><p class="muted">Astuce PC : Ctrl+K ouvre la recherche de patients. Les données restent sur cet appareil.</p></div>
+<div class="card span-12"><h3>ACTIVITÉ RÉCENTE</h3>${pecs.slice(-5).reverse().map(p=>`<p class="muted">• ${esc(p.ref||'PEC')} — ${esc(p.patientName||'Patient non renseigné')} — ${esc(p.status||'En cours')}</p>`).join('')||'<p class="muted">Aucune activité enregistrée.</p>'}</div></div>`}
+function patientName(p){return `${p.first||''} ${p.last||''}`.trim()}
+function patientsPage(){let c=$('#content');c.innerHTML=`<div class="card"><div class="actions" style="justify-content:space-between"><input class="search" style="max-width:360px" id="patientSearch" aria-label="Rechercher un dossier patient" placeholder="Rechercher nom, prénom, Discord…">${canEditPatient()?`<button class="btn primary" onclick="patientForm()">＋ Créer une fiche de suivi</button>`:''}</div><p id="patientCount" role="status" aria-live="polite"></p><div id="patientTable" class="tablewrap" style="margin-top:14px"></div></div>`;$('#patientSearch').oninput=renderPatientTable;renderPatientTable()}
+function renderPatientTable(){let q=($('#patientSearch')?.value||'').toLowerCase();let arr=patients.filter(p=>(patientName(p)+' '+p.discord).toLowerCase().includes(q));$('#patientCount').textContent=arr.length+' dossier(s) affiché(s) sur '+patients.length;$('#patientTable').innerHTML=`<table><thead><tr><th>Patient</th><th>Date de naissance</th><th>Médecin traitant</th><th>Discord</th><th>Action</th></tr></thead><tbody>${arr.map(p=>`<tr><td>${esc(patientName(p))}</td><td>${esc(p.dob)}</td><td>${esc(p.doctor||'Non affecté')}</td><td>${esc(p.discord)}</td><td><button class="btn small" onclick="patientDetail(${p.id})">Consulter le dossier</button>${canDeletePatient()?` <button class="btn small danger" onclick="deletePatient(${p.id})">Supprimer</button>`:'' }</td></tr>`).join('')||'<tr><td colspan="5" class="muted">Aucun dossier correspondant. Essayez un autre terme.</td></tr>'}</tbody></table>`}
+function userOptions(roleFilter){return users.filter(u=>!roleFilter||u.role===roleFilter).map(u=>`<option value="${esc(u.name)}">${esc(u.name)} (${esc(u.role)})</option>`).join('')}
+
+function patientDetail(id){
+ let p=patients.find(x=>x.id===id); if(!p){go('patients');return}
+ let related=pecs.filter(x=>x.patientId===id || ((x.first||'').toLowerCase()===(p.first||'').toLowerCase() && (x.last||'').toLowerCase()===(p.last||'').toLowerCase() && x.dob===p.dob)).sort((a,b)=>b.id-a.id);
+ $('#content').innerHTML=`<div class="grid">
+ <div class="card span-8"><div class="actions" style="justify-content:space-between"><div><div class="eyebrow">DOSSIER DE SUIVI</div><h3 style="font-size:20px;margin:5px 0">${esc(patientName(p))}</h3><span class="tag">${esc(p.status||'Actif')}</span></div><div class="actions">${canEditPatient()?`<button class="btn" onclick="patientForm(${p.id})">Modifier le dossier</button>`:''}${canDeletePatient()?`<button class="btn danger" onclick="deletePatient(${p.id})">Supprimer la fiche</button>`:'' }<button class="btn ghost" onclick="go('patients')">Retour</button></div></div>
+ <div class="section-title">IDENTITÉ ET RÉFÉRENT</div><div class="formgrid">
+ <div><span class="muted">Date de naissance</span><br><b>${esc(p.dob||'Non renseignée')}</b></div><div><span class="muted">Pseudo Discord</span><br><b>${esc(p.discord||'Non renseigné')}</b></div>
+ <div><span class="muted">Médecin référent</span><br><b>${esc(p.doctor||'Non affecté')}</b></div><div><span class="muted">Statut du dossier</span><br><b>${esc(p.status||'Actif')}</b></div>
+ <div class="full"><span class="muted">Informations complémentaires</span><p>${esc(p.notes||'Aucune information complémentaire.')}</p></div></div></div>
+ <div class="card span-4"><h3>ACTIONS DU DOSSIER</h3><div class="actions" style="flex-direction:column">${canCare()?`<button class="btn primary" onclick="pecForm(${p.id})">＋ Nouvelle prise en charge</button><button class="btn danger" onclick="urgentForm(${p.id})">＋ PEC urgente</button>`:''}<button class="btn" onclick="appointmentForm(${p.id})">＋ Rendez-vous</button></div><p class="muted" style="margin-top:12px;font-size:11px">Les nouvelles prises en charge seront automatiquement rattachées à ce dossier.</p></div>
+ <div class="card span-12"><div class="actions" style="justify-content:space-between"><h3>HISTORIQUE DES PRISES EN CHARGE</h3><span class="tag">${related.length} entrée(s)</span></div><div class="tablewrap"><table><thead><tr><th>Référence</th><th>Date / heure</th><th>Type</th><th>Motif</th><th>Statut</th><th>Action</th></tr></thead><tbody>${related.map(x=>`<tr><td>${esc(x.ref||('PEC-'+x.id))}</td><td>${esc(x.created||'—')}</td><td>${x.urgent?'Urgente':'Standard'}</td><td>${esc(x.motif||x.reason||'—')}</td><td><span class="tag">${esc(x.status||'En cours')}</span></td><td><button class="btn small" onclick="${x.urgent?'viewUrgent':'viewPEC'}(${x.id})">Ouvrir</button></td></tr>`).join('')||'<tr><td colspan="6" class="muted">Aucune prise en charge rattachée à ce dossier.</td></tr>'}</tbody></table></div></div>${medicalRecordSection(p)}</div>`;
+}
+
+
+function medicalRecordSection(p){
+ if(!canRecordMedication()&&!canPharmacy())return '';
+ const prescriptions=p.prescriptions||[], administrations=p.administrations||[];
+ const active=prescriptions.filter(x=>x.status==='Active'&&(!x.validUntil||x.validUntil>=new Date().toISOString().slice(0,10))&&x.pharmacyReview!=='Refusée');
+ return `<div class="card span-12"><div class="actions" style="justify-content:space-between;align-items:center"><h3>ORDONNANCES · SUIVI MÉDICAMENTEUX RP</h3><span class="tag">${prescriptions.length} ordonnance(s)</span></div>
+ <p class="muted">Journal de simulation pour le jeu de rôle. Ne pas y saisir de données médicales réelles. Aucun dosage ni protocole d'injection n'est fourni.</p>
+ ${canPrescribe()?`<div class="actions"><button class="btn primary" onclick="prescriptionForm(${p.id})">＋ Ajouter une ordonnance</button></div>`:''}
+ <div class="tablewrap"><table><thead><tr><th>Date</th><th>Molécule / médicament</th><th>Voie</th><th>Prescripteur</th><th>Validité</th><th>Statut</th><th>Action</th></tr></thead><tbody>
+ ${prescriptions.slice().reverse().map(x=>`<tr><td>${esc(x.date)}</td><td>${esc(x.medication)}</td><td>${esc(x.route)}</td><td>${esc(x.author)}</td><td>${esc(x.validUntil||'Non définie')}</td><td>${esc(x.status)}${x.pharmacyReview?' · '+esc(x.pharmacyReview):''}</td><td>${canPrescribe()&&x.status==='Active'?`<button class="btn small" onclick="closePrescription(${p.id},${x.id})">Clôturer</button>`:''}${canPharmacy()?` <button class="btn small" onclick="reviewPrescription(${p.id},${x.id})">Avis pharmacie</button>`:''}${canRenewPrescription(p)?` <button class="btn small gold" onclick="renewPrescription(${p.id},${x.id})">Renouveler</button>`:''}</td></tr>`).join('')||'<tr><td colspan="7">Aucune ordonnance enregistrée.</td></tr>'}</tbody></table></div>
+ <div class="section-title">ADMINISTRATIONS DE MÉDICAMENTS</div>
+ <p class="muted">Une administration ne peut être enregistrée qu'en référence à une ordonnance active du dossier.</p>
+ ${active.length&&canRecordMedication()?`<button class="btn primary" onclick="administrationForm(${p.id})">＋ Consigner une administration</button>`:'<p class="notice">Aucune ordonnance active : l’enregistrement d’administration est indisponible.</p>'}
+ <div class="tablewrap"><table><thead><tr><th>Date / heure</th><th>Médicament</th><th>Voie</th><th>Intervenant</th><th>Observation RP</th></tr></thead><tbody>${administrations.slice().reverse().map(x=>`<tr><td>${esc(x.date)}</td><td>${esc(x.medication)}</td><td>${esc(x.route)}</td><td>${esc(x.author)}</td><td>${esc(x.note)}</td></tr>`).join('')||'<tr><td colspan="5">Aucune administration consignée.</td></tr>'}</tbody></table></div></div>`;
+}
+const rxMolecules=()=>[...new Set(medicationCatalog.flatMap(c=>String(c[2]).split(/[,;]/).map(x=>x.trim().replace(/\s*\([^)]*\)/g,'')).filter(x=>x.length>2)))].sort((a,b)=>a.localeCompare(b,'fr'));
+function rxSuggest(){
+ const q=normalizeSearch($('#rxDrug')?.value||''),box=$('#rxSuggestions');if(!box)return;
+ const found=q?rxMolecules().filter(x=>normalizeSearch(x).includes(q)).slice(0,12):rxMolecules().slice(0,12);
+ box.innerHTML=found.map(x=>`<button type="button" class="btn small ghost" style="margin:3px" onclick="chooseRxMolecule('${x.replace(/\\/g,'\\\\').replace(/'/g,"\\'")}')">${esc(x)}</button>`).join('')||'<span class="muted">Aucune suggestion. La saisie libre reste possible.</span>';
+}
+function chooseRxMolecule(name){$('#rxDrug').value=name;rxSuggest();rxAutoFill();$('#rxDrug').focus()}
+function rxAutoFill(){
+ const drug=$('#rxDrug')?.value.trim();if(!drug)return;
+ if($('#rxDose')&&!$('#rxDose').value)$('#rxDose').placeholder='Dose à valider pour '+drug;
+ if($('#rxDays')&&!$('#rxDays').value)$('#rxDays').placeholder='Durée à valider';
+}
+function canRenewPrescription(p){return current?.role==='Médecin'&&!!p?.doctor&&normalizeSearch(p.doctor.trim())===normalizeSearch(current.name.trim())}
+function renewPrescription(patientId,rxId){
+ const p=patients.find(x=>x.id===patientId),rx=p?.prescriptions?.find(x=>x.id===rxId);
+ if(!rx||!canRenewPrescription(p)){alert('Renouvellement réservé au médecin traitant indiqué sur le dossier.');return}
+ prescriptionForm(patientId,rxId);
+}
+
+function prescriptionForm(id,renewFrom=null){
+ if(!canPrescribe())return;
+ const p=patients.find(x=>x.id===id);if(!p)return;
+ const source=renewFrom===null?null:p.prescriptions?.find(x=>x.id===renewFrom);
+ if(renewFrom!==null&&(!source||!canRenewPrescription(p)))return;
+ $('#content').innerHTML=`<div class="card"><h3>${source?'Renouvellement':'Nouvelle ordonnance'} RP — ${esc(patientName(p))}</h3>
+ <p class="muted">Simulation documentaire uniquement. Les doses réelles dépendent de l'indication, de la présentation, de l'âge, du poids, des fonctions rénale et hépatique et des interactions. Aucune dose recommandée automatiquement.</p>
+ <div class="formgrid">
+ <div class="field full"><label for="rxDrug">Rechercher une molécule</label><input id="rxDrug" maxlength="150" oninput="rxSuggest();rxAutoFill()" autocomplete="off" placeholder="Saisir pour filtrer les propositions"><div id="rxSuggestions" class="ux-hint" aria-live="polite"></div></div>
+ <div class="field"><label for="rxRoute">Voie prévue</label><select id="rxRoute"><option>Orale</option><option>Intraveineuse</option><option>Inhalation</option></select></div>
+ <div class="field"><label for="rxValidity">Validité administrative de l'ordonnance RP</label><input id="rxValidity" type="date" min="${new Date().toISOString().slice(0,10)}"></div>
+ <div class="field"><label for="rxDays">Durée du traitement (jours, à valider)</label><input id="rxDays" type="number" min="1" max="3650" placeholder="À définir par le médecin"></div><div class="field full"><label for="rxDose">Dose prescrite (champ documentaire facultatif, sans recommandation automatique)</label><input id="rxDose" maxlength="120" placeholder="À renseigner uniquement depuis une prescription validée"></div>
+ <p class="muted full">La dose et la durée thérapeutique ne peuvent pas être déterminées à partir de la molécule seule. Champs modifiables après validation du prescripteur.</p><div class="field full"><label for="rxNote">Motif et observations RP</label><textarea id="rxNote" maxlength="1000"></textarea></div>
+ </div><div class="actions"><button class="btn primary" onclick="savePrescription(${id})">Enregistrer l'ordonnance</button><button class="btn ghost" onclick="patientDetail(${id})">Annuler</button></div></div>`;
+ if(source){
+  $('#rxDrug').value=source.medication||'';
+  $('#rxRoute').value=source.route||'Orale';
+  $('#rxDose').value=source.dose||'';
+  $('#rxDays').value=source.durationDays||'';
+  $('#rxNote').value=source.note||'';
+ }
+ const hidden=document.createElement('input');hidden.type='hidden';hidden.id='rxRenewFrom';hidden.value=source?String(source.id):'';$('#content').appendChild(hidden);
+ rxSuggest();rxAutoFill();
+}
+function savePrescription(id){
+ if(!canPrescribe())return;
+ const p=patients.find(x=>x.id===id),drug=$('#rxDrug')?.value.trim(),valid=$('#rxValidity')?.value;
+ if(!p||!drug){alert('Renseignez le médicament.');return}
+ const renewedFrom=$('#rxRenewFrom')?.value||'';
+ if(renewedFrom&&(!canRenewPrescription(p)||!p.prescriptions?.some(x=>String(x.id)===renewedFrom))){alert('Renouvellement réservé au médecin traitant.');return}
+ const durationDays=$('#rxDays')?.value||'';
+ if(durationDays&&(!Number.isInteger(Number(durationDays))||Number(durationDays)<1||Number(durationDays)>3650)){alert('Durée invalide.');return}
+ if(!valid){alert('Indiquez une date de fin de validité.');return}
+ if(valid<new Date().toISOString().slice(0,10)){alert('La validité ne peut pas être passée.');return}
+ p.prescriptions=p.prescriptions||[];
+ p.prescriptions.push({id:Date.now(),date:new Date().toLocaleString('fr-FR'),medication:drug,route:$('#rxRoute').value,dose:$('#rxDose').value.trim(),durationDays:durationDays?Number(durationDays):null,renewedFrom:renewedFrom||null,validUntil:valid,note:$('#rxNote').value,author:current.name,status:'Active',pharmacyReview:'En attente'});
+ saveAll();patientDetail(id);notify('Ordonnance RP enregistrée.');
+}
+function reviewPrescription(patientId,rxId){
+ if(!canPharmacy())return;
+ const p=patients.find(x=>x.id===patientId),rx=p?.prescriptions?.find(x=>x.id===rxId);if(!rx)return;
+ const choice=prompt('Avis pharmaceutique RP : saisir « Vérifiée », « À clarifier » ou « Refusée ».','À clarifier');
+ if(choice===null)return;
+ if(!['Vérifiée','À clarifier','Refusée'].includes(choice)){alert('Avis non reconnu.');return}
+ rx.pharmacyReview=choice;rx.pharmacyReviewer=current.name;rx.pharmacyReviewedAt=new Date().toISOString();
+ saveAll();patientDetail(patientId);notify('Avis pharmaceutique enregistré.');
+}
+function closePrescription(patientId,rxId){
+ if(!canPrescribe())return;
+ const p=patients.find(x=>x.id===patientId),rx=p?.prescriptions?.find(x=>x.id===rxId);
+ if(!rx||!confirm('Clôturer cette ordonnance RP ?'))return;
+ rx.status='Clôturée';saveAll();patientDetail(patientId);
+}
+function administrationForm(id){
+ if(!canRecordMedication())return;
+ const p=patients.find(x=>x.id===id);if(!p)return;
+ const active=(p.prescriptions||[]).filter(x=>x.status==='Active'&&(!x.validUntil||x.validUntil>=new Date().toISOString().slice(0,10))&&x.pharmacyReview!=='Refusée');
+ if(!active.length){patientDetail(id);return}
+ $('#content').innerHTML=`<div class="card"><h3>Consigner une administration RP — ${esc(patientName(p))}</h3><p class="notice">Simulation documentaire uniquement : ne pas utiliser pour guider un acte médical réel, notamment une administration intraveineuse.</p><div class="formgrid">
+ <div class="field full"><label>Ordonnance active</label><select id="admRx" onchange="syncAdministrationRoute(${id})">${active.map(x=>`<option value="${x.id}">${esc(x.medication)} — ${esc(x.route)} — ${esc(x.author)}</option>`).join('')}</select></div>
+ <div class="field"><label>Voie d'administration</label><input id="admRoute" readonly></div>
+ <div class="field"><label>Date / heure</label><input id="admWhen" type="datetime-local" value="${new Date(Date.now()-new Date().getTimezoneOffset()*60000).toISOString().slice(0,16)}"></div>
+ <div class="field full"><label>Observation de suivi RP</label><textarea id="admNote" maxlength="1000" placeholder="Observation ou événement simulé…"></textarea></div></div>
+ <div class="actions"><button class="btn primary" onclick="saveAdministration(${id})">Enregistrer dans le suivi</button><button class="btn ghost" onclick="patientDetail(${id})">Annuler</button></div></div>`;
+ syncAdministrationRoute(id);
+}
+function syncAdministrationRoute(id){
+ const p=patients.find(x=>x.id===id),rx=p?.prescriptions?.find(x=>x.id===Number($('#admRx')?.value));
+ if($('#admRoute'))$('#admRoute').value=rx?.route||'';
+}
+function saveAdministration(id){
+ if(!canRecordMedication())return;
+ const p=patients.find(x=>x.id===id),rx=p?.prescriptions?.find(x=>x.id===Number($('#admRx')?.value));
+ if(!rx||rx.status!=='Active'||(rx.validUntil&&rx.validUntil<new Date().toISOString().slice(0,10))||rx.pharmacyReview==='Refusée'){alert('Une ordonnance active, non expirée et non refusée est nécessaire.');return}
+ if(!$('#admWhen').value){alert('Indiquez une date et une heure.');return}
+ p.administrations=p.administrations||[];
+ p.administrations.push({id:Date.now(),prescriptionId:rx.id,medication:rx.medication,route:rx.route,date:$('#admWhen').value,author:current.name,note:$('#admNote').value});
+ saveAll();patientDetail(id);notify('Administration RP ajoutée au suivi.');
+}
+
+function deletePatient(id){
+ if(!canDeletePatient()){alert('Accès refusé : suppression réservée à l’administration, à la direction et à la supervision.');return}
+ const patient=patients.find(x=>x.id===id);if(!patient)return;
+ const related=pecs.filter(x=>x.patientId===id).length;
+ const label=patientName(patient);
+ if(!confirm('Supprimer définitivement la fiche de suivi de '+label+' ?\\n'+(related?'Attention : '+related+' prise(s) en charge associée(s) seront conservées dans les registres, mais ne seront plus liées à une fiche patient.\\n':'')+'Cette action est irréversible dans cette version locale.'))return;
+ patients=patients.filter(x=>x.id!==id);
+ saveAll();go('patients');notify('Fiche de suivi supprimée : '+label);
+}
+function patientForm(id){if(!canEditPatient()){alert('Accès refusé.');return}let p=patients.find(x=>x.id===id)||{};$('#content').innerHTML=`<div class="card"><div class="section-title">IDENTITÉ DU PATIENT</div><div class="formgrid"><div class="field"><label>Nom</label><input id="pLast" value="${esc(p.last)}" required></div><div class="field"><label>Prénom</label><input id="pFirst" value="${esc(p.first)}" required></div><div class="field"><label>Date de naissance</label><input type="date" id="pDob" value="${esc(p.dob)}"></div><div class="field"><label>Pseudo Discord</label><input id="pDiscord" value="${esc(p.discord)}"></div><div class="field"><label>Médecin traitant</label><select id="pDoctor"><option value="">Non affecté</option>${userOptions('Médecin')}</select></div><div class="field"><label>Statut</label><select id="pStatus"><option>Actif</option><option>Archivé</option></select></div><div class="field full"><label>Informations complémentaires</label><textarea id="pNotes">${esc(p.notes)}</textarea></div></div><div class="actions" style="margin-top:16px"><button class="btn primary" onclick="savePatient(${id||0})">Enregistrer le dossier</button><button class="btn ghost" onclick="go('patients')">Retour</button></div></div>`;$('#pDoctor').value=p.doctor||'';$('#pStatus').value=p.status||'Actif'}
+function savePatient(id){if(!canEditPatient()){alert('Accès refusé.');return}let last=$('#pLast').value.trim(),first=$('#pFirst').value.trim();if(!last||!first){alert('Nom et prénom obligatoires.');return}let obj={id:id||Date.now(),last,first,dob:$('#pDob').value,discord:$('#pDiscord').value,doctor:$('#pDoctor').value,status:$('#pStatus').value,notes:$('#pNotes').value, prescriptions:patients.find(x=>x.id===id)?.prescriptions||[], administrations:patients.find(x=>x.id===id)?.administrations||[], diagnosticHistory:patients.find(x=>x.id===id)?.diagnosticHistory||[]};let i=patients.findIndex(p=>p.id===id);if(i>=0)patients[i]=obj;else patients.push(obj);saveAll();go('patients')}
+function appointmentsPage(){let c=$('#content');c.innerHTML=`<div class="card"><div class="actions" style="justify-content:space-between"><h3>AGENDA DES RENDEZ-VOUS</h3><button class="btn primary" onclick="appointmentForm()">＋ Créer un rendez-vous</button></div><div class="tablewrap"><table><thead><tr><th>Date / heure</th><th>Patient</th><th>Discord</th><th>Informations</th><th>Action</th></tr></thead><tbody>${appointments.map(a=>`<tr><td>${esc(a.when)}</td><td>${esc(a.first)} ${esc(a.last)}</td><td>${esc(a.discord)}</td><td>${esc(a.notes)}</td><td><button class="btn small" onclick="deleteAppointment(${a.id})">Supprimer</button></td></tr>`).join('')||'<tr><td colspan="5" class="muted">Aucun rendez-vous.</td></tr>'}</tbody></table></div></div>`}
+function appointmentForm(patientId){let p=patients.find(x=>x.id===patientId)||{};$('#content').innerHTML=`<div class="card"><h3>CRÉATION D’UN RENDEZ-VOUS</h3><div class="formgrid"><div class="field"><label>Nom</label><input id="aLast" value="${esc(p.last)}" required></div><div class="field"><label>Prénom</label><input id="aFirst" value="${esc(p.first)}" required></div><div class="field"><label>Date de naissance</label><input type="date" id="aDob" value="${esc(p.dob)}"></div><div class="field"><label>Pseudo Discord</label><input id="aDiscord" value="${esc(p.discord)}"></div><div class="field"><label>Date et heure</label><input type="datetime-local" id="aWhen" required></div><div class="field full"><label>Informations complémentaires</label><textarea id="aNotes"></textarea></div></div><div class="actions" style="margin-top:15px"><button class="btn primary" onclick="saveAppointment()">Enregistrer</button><button class="btn ghost" onclick="go('appointments')">Annuler</button></div></div>`}
+function saveAppointment(){let a={id:Date.now(),last:$('#aLast').value,first:$('#aFirst').value,dob:$('#aDob').value,discord:$('#aDiscord').value,when:$('#aWhen').value,notes:$('#aNotes').value};if(!a.last||!a.first||!a.when){alert('Nom, prénom et date/heure obligatoires.');return}appointments.push(a);saveAll();go('appointments')}
+function deleteAppointment(id){if(confirm('Supprimer ce rendez-vous ?')){appointments=appointments.filter(a=>a.id!==id);saveAll();go('appointments')}}
+function findOrCreatePatient(first,last,dob){let p=patients.find(x=>x.first.toLowerCase()===first.toLowerCase()&&x.last.toLowerCase()===last.toLowerCase()&&x.dob===dob);if(!p){p={id:Date.now()+1,first,last,dob,discord:'',doctor:'',status:'Actif',notes:'Dossier créé automatiquement depuis une prise en charge.'};patients.push(p)}return p}
+function pecPage(){let c=$('#content');c.innerHTML=`<div class="card"><div class="actions" style="justify-content:space-between"><h3>REGISTRE DES PRISES EN CHARGE</h3><button class="btn primary" onclick="pecForm()">＋ Créer une prise en charge</button></div><div class="tablewrap"><table><thead><tr><th>Référence</th><th>Patient</th><th>Création</th><th>Statut</th><th>Action</th></tr></thead><tbody>${pecs.map(p=>`<tr><td>${esc(p.ref)}</td><td>${esc(p.patientName)}</td><td>${esc(p.created)}</td><td><span class="tag">${esc(p.status)}</span></td><td><button class="btn small" onclick="viewPEC(${p.id})">Ouvrir</button></td></tr>`).join('')||'<tr><td colspan="5" class="muted">Aucune prise en charge.</td></tr>'}</tbody></table></div></div>`}
+function pecForm(patientId){if(!canCare()){alert('Accès refusé pour ce rôle.');return}let patient=patients.find(x=>x.id===patientId)||{};let now=new Date().toISOString().slice(0,16);$('#content').innerHTML=`<div class="card"><h3>NOUVELLE PRISE EN CHARGE MÉDICALE</h3><input type="hidden" id="xPatientId" value="${patient.id||0}"><div class="formgrid"><div class="field"><label>Nom *</label><input id="xLast" value="${esc(patient.last)}" required></div><div class="field"><label>Prénom *</label><input id="xFirst" value="${esc(patient.first)}" required></div><div class="field"><label>Date de naissance *</label><input type="date" id="xDob" value="${esc(patient.dob)}" required></div><div class="field"><label>Date / heure de création</label><input type="datetime-local" id="xWhen" value="${now}"></div><div class="field full"><label>Motif / contexte RP *</label><textarea id="xReason" required></textarea></div><div class="field"><label>Intervenant</label><input id="xStaff" value="${esc(current.name)}"></div><div class="field"><label>Devenir</label><select id="xOutcome"><option value="">À définir</option><option>Sur place</option><option>Évacuation CH</option><option>Transfert</option></select></div></div><div class="actions" style="margin-top:15px"><button class="btn primary" onclick="savePEC()">Sauvegarder la PEC</button><button class="btn ghost" onclick="go('pec')">Annuler</button></div></div>`}
+function savePEC(){if(!canCare()){alert('Accès refusé pour ce rôle.');return}let last=$('#xLast').value.trim(),first=$('#xFirst').value.trim(),dob=$('#xDob').value;if(!last||!first||!dob||!$('#xReason').value.trim()){alert('Les champs marqués * sont obligatoires.');return}let linkedId=Number($('#xPatientId').value||0),patient=patients.find(x=>x.id===linkedId)||findOrCreatePatient(first,last,dob),p={id:Date.now(),patientId:patient.id,patientName:patientName(patient),last,first,dob,created:$('#xWhen').value,reason:$('#xReason').value,staff:$('#xStaff').value,outcome:$('#xOutcome').value,status:'En cours',urgent:false};pecs.push(p);saveAll();viewPEC(p.id)}
+function viewPEC(id){let p=pecs.find(x=>x.id===id);if(!p)return;activePEC=id;$('#content').innerHTML=`<div class="card"><div class="actions" style="justify-content:space-between"><h3>${esc(p.ref||'PRISE EN CHARGE')} · ${esc(p.patientName)}</h3><span class="tag">${esc(p.status)}</span></div><p class="muted">Créée le ${esc(p.created)} · Intervenant : ${esc(p.staff)}</p><div class="section-title">CONTEXTE</div><p>${esc(p.reason)}</p><div class="section-title">SUIVI</div><div class="formgrid"><div class="field"><label>Devenir</label><select id="pecOutcome"><option value="">À définir</option><option>Sur place</option><option>Évacuation CH</option><option>Transfert</option></select></div><div class="field"><label>Notes complémentaires</label><textarea id="pecNotes">${esc(p.notes)}</textarea></div></div><div class="actions" style="margin-top:15px"><button class="btn primary" onclick="updatePEC(${id})">Enregistrer les modifications</button><button class="btn" onclick="advancedBilan(${id})">Créer / consulter bilan avancé</button><button class="btn" onclick="print()">Imprimer</button>${canUrgentClose()?`<button class="btn gold" onclick="closePEC(${id})">Clôturer la PEC</button>`:''}<button class="btn ghost" onclick="go('pec')">Retour</button></div></div>`;if(canSeeAudit())$('#content').insertAdjacentHTML('beforeend',pecAuditSection(id));$('#pecOutcome').value=p.outcome||''}
+function updatePEC(id){if(!canCare()){alert('Accès refusé pour ce rôle.');return}let p=pecs.find(x=>x.id===id);p.outcome=$('#pecOutcome').value;p.notes=$('#pecNotes').value;saveAll();viewPEC(id)}
+function closePEC(id){let p=pecs.find(x=>x.id===id);if(!p.outcome){alert('Définissez le devenir avant la clôture.');return}if(!canUrgentClose()){alert('Habilitation insuffisante.');return}p.status='Clôturée';p.closedAt=new Date().toLocaleString('fr-FR');saveAll();viewPEC(id)}
+const urgentMotifs=['Malaise','Trauma','Plaie','Relevage','Accident de Voie Publique','Détresse Psychologique','Fausse Alerte','Arrêt Cardio-Respiratoire','Accouchement','Recherche de Personne','Carence d’Ambulance Privée','Intoxication','Intoxication Gaz','Autre'];
+const urgCats=['IMPLIQUÉ','URGENCE RELATIVE','URGENCE ABSOLUE','DÉCÉDÉ'];
+function urgentPage(){let c=$('#content');c.innerHTML=`<div class="card"><div class="actions" style="justify-content:space-between"><h3>REGISTRE DES PEC URGENTES</h3><button class="btn danger" onclick="urgentForm()">＋ Nouvelle PEC urgente</button></div><div class="tablewrap"><table><thead><tr><th>Référence</th><th>Victime</th><th>Catégorie</th><th>Motif</th><th>Statut</th><th>Action</th></tr></thead><tbody>${pecs.filter(p=>p.urgent).map(p=>`<tr><td>${esc(p.ref)}</td><td>${esc(p.patientName)}</td><td>${esc(p.category)}</td><td>${esc(p.motif)}</td><td>${esc(p.status)}</td><td><button class="btn small" onclick="viewUrgent(${p.id})">Ouvrir</button></td></tr>`).join('')||'<tr><td colspan="6" class="muted">Aucune PEC urgente.</td></tr>'}</tbody></table></div></div>`}
+function urgentForm(patientId){if(!canCare()){alert('Accès refusé pour ce rôle.');return}let patient=patients.find(x=>x.id===patientId)||{};let now=new Date(),stamp=now.toISOString().slice(0,16),ref='NOMEV-000-PAR-'+String(now.getFullYear()).slice(-2)+'-PEC';$('#content').innerHTML=`<div class="card"><h3>OUVERTURE D’UNE PRISE EN CHARGE URGENTE</h3><input type="hidden" id="uPatientId" value="${patient.id||0}"><div class="section-title">INFORMATIONS INITIALES</div><div class="formgrid three"><div class="field"><label>Catégorisation *</label><select id="uCat">${urgCats.map(x=>`<option>${x}</option>`).join('')}</select></div><div class="field"><label>Sexe *</label><select id="uSex"><option>Homme</option><option>Femme</option></select></div><div class="field"><label>Motif *</label><select id="uMotif">${urgentMotifs.map(x=>`<option>${x}</option>`).join('')}</select></div><div class="field"><label>Heure de création</label><input id="uWhen" type="datetime-local" value="${stamp}"></div><div class="field full"><label>Numéro de fiche</label><input id="uRef" value="${ref}"></div></div><div class="section-title">INFORMATIONS VICTIME</div><div class="formgrid three"><div class="field"><label>Nom *</label><input id="uLast" value="${esc(patient.last)}" required></div><div class="field"><label>Prénom *</label><input id="uFirst" value="${esc(patient.first)}" required></div><div class="field"><label>Date de naissance *</label><input id="uDob" type="date" value="${esc(patient.dob)}" oninput="calcAge()" required></div><div class="field"><label>Âge</label><input id="uAge" readonly></div><div class="field"><label>Pays de naissance</label><input id="uCountry"></div><div class="field"><label>Ville de naissance</label><input id="uCity"></div><div class="field"><label>Nationalité</label><input id="uNationality"></div><div class="field"><label>Adresse</label><input id="uAddress"></div><div class="field"><label>Numéro de dossard (optionnel)</label><input id="uBib"></div><div class="field full"><label>Accompagnateur (si mineur)</label><input id="uGuardian"></div></div><div class="section-title">BILAN INITIAL</div><div class="formgrid three"><div class="field"><label>Circonstances</label><textarea id="uCirc"></textarea></div><div class="field"><label>Signes particuliers</label><textarea id="uSigns"></textarea></div><div class="field"><label>Gestes effectués</label><textarea id="uActs"></textarea></div></div><div class="actions" style="margin-top:16px"><button class="btn primary" onclick="saveUrgent()">Sauvegarder la PEC urgente</button><button class="btn ghost" onclick="go('urgent')">Annuler</button></div></div>`}
+function calcAge(){let d=$('#uDob').value;if(!d){$('#uAge').value='';return}let b=new Date(d),n=new Date(),a=n.getFullYear()-b.getFullYear();if(n.getMonth()<b.getMonth()||(n.getMonth()===b.getMonth()&&n.getDate()<b.getDate()))a--;$('#uAge').value=a>=0?a:''}
+function saveUrgent(){if(!canCare()){alert('Accès refusé pour ce rôle.');return}let last=$('#uLast').value.trim(),first=$('#uFirst').value.trim(),dob=$('#uDob').value;if(!last||!first||!dob){alert('Nom, prénom et date de naissance obligatoires.');return}let linkedId=Number($('#uPatientId').value||0),pt=patients.find(x=>x.id===linkedId)||findOrCreatePatient(first,last,dob),p={id:Date.now(),patientId:pt.id,patientName:patientName(pt),last,first,dob,created:$('#uWhen').value,ref:$('#uRef').value,category:$('#uCat').value,sex:$('#uSex').value,motif:$('#uMotif').value,age:$('#uAge').value,country:$('#uCountry').value,city:$('#uCity').value,nationality:$('#uNationality').value,address:$('#uAddress').value,bib:$('#uBib').value,guardian:$('#uGuardian').value,circ:$('#uCirc').value,signs:$('#uSigns').value,acts:$('#uActs').value,status:'En cours',urgent:true,staff:current.name};pecs.push(p);saveAll();viewUrgent(p.id)}
+function viewUrgent(id){let p=pecs.find(x=>x.id===id);if(!p)return;activePEC=id;$('#content').innerHTML=`<div class="card"><div class="actions" style="justify-content:space-between"><h3>${esc(p.ref)} · ${esc(p.patientName)}</h3><span class="tag red">${esc(p.category)}</span></div><p class="muted">${esc(p.motif)} · ${esc(p.created)}</p><div class="section-title">BILAN INITIAL</div><div class="formgrid three"><div class="field"><label>Circonstances</label><textarea id="vCirc">${esc(p.circ)}</textarea></div><div class="field"><label>Signes particuliers</label><textarea id="vSigns">${esc(p.signs)}</textarea></div><div class="field"><label>Gestes effectués</label><textarea id="vActs">${esc(p.acts)}</textarea></div></div><div class="actions" style="margin-top:15px"><button class="btn primary" onclick="saveUrgentNotes(${id})">Enregistrer</button><button class="btn" onclick="advancedBilan(${id})">Créer / consulter bilan avancé</button><button class="btn" onclick="print()">Imprimer le bilan</button><button class="btn ghost" onclick="go('urgent')">Retour</button></div><div class="notice" style="margin-top:14px">Les rubriques du bilan avancé sont des champs de compte rendu RP. Elles ne constituent pas un protocole de soin ni une aide clinique validée.</div></div>`}
+function saveUrgentNotes(id){if(!canCare()){alert('Accès refusé pour ce rôle.');return}let p=pecs.find(x=>x.id===id);p.circ=$('#vCirc').value;p.signs=$('#vSigns').value;p.acts=$('#vActs').value;saveAll();viewUrgent(id)}
+
+const bilanSections=['CI','I','AB','XC','D','CO','S'];
+const bilanTitles={CI:'Circonstanciel',I:'Identité',AB:'Air',XC:'Hémorragie & circulation',D:'Neurologie',CO:'Complémentaire',S:'Surveillance'};
+const checkGroups={
+'CI Sécurité':['Danger supprimé','Scène balisée','Dégagement d’urgence'],
+'CI Scène':['IMPLIQUÉ','URGENCE RELATIVE','URGENCE ABSOLUE','DÉCÉDÉ'],
+'CI Situation':['Moyens suffisants','Renfort demandé'],
+'AB Obstruction':['Tape dans le dos','Compression abdominale / thoracique'],
+'AB Libération':['Retournement','Retrait de casque','Bascule arrière','Élévation du menton','LVA assis','Aspiration','Position neutre'],
+'AB Respiration':['Absente','Anormale','Moins d’un mouvement / 10 sec','Insuffisante','Aspiration à mucosité'],
+'AB Visuel':['Œdème face / cou','Se tient la poitrine','Cherche à s’asseoir / refuse de s’allonger','Cyanose','Effort pour respirer','Sueurs anormales','Contraction haut thorax / cou'],
+'AB Bruits':['Gargouillement','Bruit à l’inspiration','Sifflement à l’expiration'],
+'AB Parole / attitude':['Somnolence','Confusion','Anxiété','Agitation','Essoufflement'],
+'AB Enfant':['Battement des ailes du nez','Creusement du sternum'],
+'AB Mouvement':['Ample','Régulière','Silencieuse','Superficielle','Bruyante','Difficile'],
+'XC Hémorragies':['Pansement compressif','Garrot'],
+'XC Pouls':['Absence','Doute','Pas de prise','ACR'],
+'XC ACR':['Massage cardiaque','DAE','BAVU'],
+'XC Visuel':['Décoloration de la peau','Pâleur extrémités','Pâleur interne paupières','Pâleur lèvres','Transpiration + refroidissement','Marbrures blanches','Marbrures violettes'],
+'XC Palpation':['Radial absent + carotidien présent'],
+'XC Parole / attitude':['Sensation de soif','Agitation','Angoisse','Refus de s’asseoir / se tenir debout','Vertiges'],
+'XC Pouls mesuré':['Radial','Carotidien','Huméral','Fémoral'],
+'XC Caractéristiques':['Ample','Régulier','Symétrique','Peu perceptible','Irrégulier','Asymétrique','Au repos'],
+'D Intoxication':['Alcool','Cannabis','Opioïdes','Ecstasy','MDMA','Cocaïne','Antidépresseurs','Anabolisants','Autres'],
+'D Voie':['Ingestion','Inhalation','Injection','Projection'],
+'D Visuel':['Asymétrie du visage','Paralysie totale / partielle','Somnolence','Convulsion'],
+'D Parole / attitude':['Anomalie de la parole','Désorienté temps / espace','Perte de connaissance initiale','Amnésie de l’événement'],
+'D Pupilles':['Égales','Inégales','Aréactives G','Aréactives D','Dilatées G','Dilatées D','Serrées G','Serrées D'],
+'CO Position':['Allongé','Demi-assis','Assis','Allongé jambes relevées'],
+'CO Traumatismes':['Réalignement','Écharpe','Attelle','ACT','Matelas à dépression','Plan dur','Collier'],
+'S État victime':['Amélioration','Inchangé','Dégradation'],
+'S Devenir':['Laisser sur place','Évacuation CH'],
+'S Évacuation par':['UDPS','SAMU','ASSU','Pompiers','Autre']
+};
+function groupHTML(key){return `<div class="field full"><label>${key.split(' ').slice(1).join(' ')}</label><div class="checks">${(checkGroups[key]||[]).map(v=>`<label class="check"><input type="checkbox" data-group="${esc(key)}" value="${esc(v)}">${esc(v)}</label>`).join('')}</div></div>`}
+function textField(label,id,full=false,placeholder=''){return `<div class="field ${full?'full':''}"><label>${label}</label><textarea id="${id}" placeholder="${placeholder}"></textarea></div>`}
+function inputField(label,id,type='text'){return `<div class="field"><label>${label}</label><input id="${id}" type="${type}"></div>`}
+function advancedBilan(id){activePEC=id;let p=pecs.find(x=>x.id===id);if(!p.bilan)p.bilan={};activeBilan='CI';renderBilan(p)}
+function renderBilan(p){let c=$('#content');c.innerHTML=`<div class="card"><div class="actions" style="justify-content:space-between"><div><div class="eyebrow">BILAN AVANCÉ · ${esc(p.ref||p.patientName)}</div><h3 style="margin:5px 0">${esc(p.patientName)}</h3></div><button class="btn small" onclick="view${p.urgent?'Urgent':'PEC'}(${p.id})">Fermer</button></div><div class="bilan-layout"><div class="letter-nav">${bilanSections.map(k=>`<button class="${activeBilan===k?'active':''}" onclick="activeBilan='${k}';renderBilan(pecs.find(x=>x.id===${p.id}))">${k}</button>`).join('')}</div><div><div class="section-title">${activeBilan} · ${bilanTitles[activeBilan]}</div><div id="bilanForm">${bilanContent(activeBilan,p)}</div><div class="actions no-print" style="margin-top:16px"><button class="btn primary" onclick="saveBilan(${p.id})">Enregistrer cette rubrique</button><button class="btn" onclick="print()">Imprimer</button></div></div></div></div>`;loadBilanValues(p)}
+function bilanContent(k,p){if(k==='CI')return `<div class="formgrid"><div class="field full"><label>Sécurité — justification (obligatoire si une case est cochée)</label><textarea id="bSafety"></textarea></div>${groupHTML('CI Sécurité')}<div class="field full"><label>Scène — accès</label><textarea id="bAccess"></textarea></div><div class="field full"><label>Scène — que s’est-il passé ?</label><textarea id="bScene"></textarea></div>${groupHTML('CI Scène')}<div class="field full"><label>Situation — plainte(s) principale(s)</label><textarea id="bComplaint"></textarea></div>${groupHTML('CI Situation')}</div>`;
+if(k==='I')return `<div class="formgrid"><div class="field"><label>Nom</label><input id="bLast" value="${esc(p.last)}"></div><div class="field"><label>Prénom</label><input id="bFirst" value="${esc(p.first)}"></div>${inputField('Nom de jeune fille','bMaiden')}<div class="field"><label>Date de naissance</label><input id="bDob" type="date" value="${esc(p.dob)}"></div>${inputField('Adresse','bAddress')}${inputField('Code postal','bPostal')}${inputField('Ville','bTown')}${inputField('Téléphone','bPhone')}<div class="field full"><label>Personne à prévenir — nom et prénom</label><input id="bContact"></div>${textField('Notes personne à prévenir','bContactNotes',true)}</div>`;
+if(k==='AB')return `<div class="formgrid">${groupHTML('AB Obstruction')}${groupHTML('AB Libération')}${groupHTML('AB Respiration')}${groupHTML('AB Visuel')}${groupHTML('AB Bruits')}${groupHTML('AB Parole / attitude')}${groupHTML('AB Enfant')}<div class="field"><label>Mouvements par minute</label><input id="bRR" inputmode="numeric" maxlength="2"></div>${groupHTML('AB Mouvement')}<div class="field"><label>Saturation SpO₂ (%) — indisponible en cas d’intoxication au gaz</label><input id="bSpo" placeholder="XX %"></div><div class="field"><label>O₂ — indication de débit (L/min)</label><input id="bO2"></div>${textField('Signes observés — notes','bAirNotes',true)}</div>`;
+if(k==='XC')return `<div class="formgrid">${groupHTML('XC Hémorragies')}<div class="field"><label>Heure de pose pansement / garrot</label><input id="bTourTime" type="time"></div>${groupHTML('XC Pouls')}<div class="field full"><label>ACR — éléments consignés (si ACR sélectionné)</label><div class="checks">${groupHTML('XC ACR')}</div></div><div class="field"><label>Heure du choc DAE (si concerné)</label><input id="bShockTime" type="time"></div><div class="field"><label>Nombre d’analyses DAE</label><input id="bAnalyses" type="number"></div><div class="field"><label>Insufflations par cycle (BAVU)</label><input id="bBavu" type="number"></div><div class="field"><label>Compressions par cycle</label><input id="bCompressions" type="number"></div>${groupHTML('XC Visuel')}${groupHTML('XC Palpation')}${groupHTML('XC Parole / attitude')}<div class="field"><label>Battements par minute</label><input id="bPulse" maxlength="2"></div>${groupHTML('XC Pouls mesuré')}${groupHTML('XC Caractéristiques')}<div class="field"><label>Tension (mmHg) — xxx Dia / xxx Sys</label><input id="bBP" placeholder="000 Dia / 000 Sys"></div><div class="field"><label>TRC</label><div class="checks"><label class="check"><input type="radio" name="bTRC" value="< 2 sec"> &lt; 2 sec</label><label class="check"><input type="radio" name="bTRC" value="> 2 sec"> &gt; 2 sec</label></div></div>${textField('Signes observés — notes','bCircNotes',true)}</div>`;
+if(k==='D')return `<div class="formgrid">${groupHTML('D Intoxication')}${groupHTML('D Voie')}<div class="field"><label>Autre substance / dosage déclaré</label><textarea id="bSubstance"></textarea></div><div class="field"><label>Inconscience</label><select id="bUnconscious"><option>Non renseigné</option><option>Oui</option><option>Non</option></select></div>${groupHTML('D Visuel')}${groupHTML('D Parole / attitude')}${groupHTML('D Pupilles')}<div class="field full"><label>Sensimotricité — cocher les fonctions conservées</label><div class="checks">${['Mains G','Mains D','Bras G','Bras D','Jambes G','Jambes D','Pieds G','Pieds D','Dos','Thorax','Abdomen','Lombaires'].map(v=>`<label class="check"><input type="checkbox" data-group="D Sensimotricité" value="${v}">${v}</label>`).join('')}</div></div><div class="field full"><label>Score de Glasgow — ouverture des yeux</label><select id="gEye" onchange="calcGlasgow()"><option value="">Non renseigné</option><option value="4">Spontanée (4)</option><option value="3">À la demande (3)</option><option value="2">À la douleur (2)</option><option value="1">Aucune (1)</option></select></div><div class="field"><label>Réponse motrice</label><select id="gMotor" onchange="calcGlasgow()"><option value="">Non renseigné</option><option value="6">À la demande (6)</option><option value="5">Orientée à la douleur (5)</option><option value="4">Évitement non adapté (4)</option><option value="3">Décortication (3)</option><option value="2">Décérébration (2)</option><option value="1">Aucune (1)</option></select></div><div class="field"><label>Réponse verbale</label><select id="gVerbal" onchange="calcGlasgow()"><option value="">Non renseigné</option><option value="5">Orientée (5)</option><option value="4">Confuse (4)</option><option value="3">Inappropriée (3)</option><option value="2">Incompréhensible (2)</option><option value="1">Aucune (1)</option></select></div><div class="field"><label>Glasgow calculé</label><input id="gTotal" readonly placeholder="3 à 15"></div><div class="field"><label>Glycémie — valeur</label><input id="bGlucose" maxlength="3"></div><div class="field"><label>Unité</label><select id="bGlucoseUnit"><option>mg/dL</option><option>g/L</option><option>mmol/L</option></select></div><div class="field"><label>Diabète</label><div class="checks"><label class="check"><input type="checkbox" id="bDiabetic"> Diabétique</label><label class="check"><input type="checkbox" id="bInsulin"> Insulinodépendant(e)</label></div></div><div class="field"><label>Température (°C)</label><input id="bTemp" placeholder="00,0"></div><div class="field"><label>Prise</label><select id="bTempSite"><option>Tympanique</option><option>Axillaire</option><option>Buccale</option><option>Rectale</option></select></div></div>`;
+if(k==='CO')return `<div class="formgrid">${groupHTML('CO Position')}${textField('Plainte / trauma','bComplaint2')}${textField('Circonstances','bCirc2')}${textField('Caractéristiques','bFeatures') }<div class="field full"><label>Localisation — sélectionner les zones concernées sur les schémas textuels</label><div class="bodymap"><div class="map"><b>FACE AVANT</b><p class="muted">Schéma corporel — sélection des zones</p>${['Tête','Épaule G','Épaule D','Thorax','Abdomen','Aine','Biceps G','Biceps D','Avant-bras G','Avant-bras D','Mains G','Mains D','Cuisses G','Cuisses D','Mollets G','Mollets D','Pieds G','Pieds D'].map(v=>`<label class="check"><input type="checkbox" data-group="CO Localisation" value="${v}">${v}</label>`).join('')}</div><div class="map"><b>FACE ARRIÈRE</b><p class="muted">Schéma corporel — sélection des zones</p>${['Tête arrière','Dos','Lombaires','Fesses G','Fesses D','Épaules G/D','Bras G/D','Mains G/D','Cuisses G/D','Mollets G/D','Pieds G/D'].map(v=>`<label class="check"><input type="checkbox" data-group="CO Localisation" value="${v}">${v}</label>`).join('')}</div></div></div><div class="field"><label>Intensité (1 à 10)</label><input id="bIntensity" type="number" min="1" max="10"></div>${textField('Durée','bDuration')}${textField('Allergies','bAllergy')}${textField('Médicaments déclarés','bMedication')}${textField('Passé médical / hospitalisations','bHistory')}${textField('Dernier repas','bMeal')}${textField('Événement ayant conduit à la situation','bEvent')}${textField('Traumatismes — précision / mécanisme','bTrauma',true)}${groupHTML('CO Traumatismes')}</div>`;
+if(k==='S')return `<div class="actions no-print"><button class="btn" onclick="addSurveillance(${p.id})">＋ Ajouter une page de surveillance</button></div><div id="surveillanceList">${(p.bilan.surveillance||[{}]).map((s,i)=>surveillanceHTML(s,i)).join('')}</div><div class="section-title">DEVENIR DE LA PRISE EN CHARGE</div><div class="formgrid">${groupHTML('S État victime')}${groupHTML('S Devenir')}<div class="field full"><label>Commentaires / décharge</label><textarea id="bOutcomeNotes">${esc(p.bilan.outcomeNotes||'')}</textarea></div>${groupHTML('S Évacuation par')}<div class="field"><label>Centre hospitalier / clinique</label><input id="bHospital"></div><div class="field"><label>Heure de départ</label><input id="bDeparture" type="time"></div><div class="field full"><label>Autre transport (préciser)</label><input id="bTransportOther"></div><div class="field full"><label>Décharge de responsabilité — texte RP</label><textarea id="bWaiver">Je soussigné(e), déclare être informé(e) de la situation présentée dans le cadre de cette prise en charge RP et indique refuser la prise en charge et/ou le transport en milieu hospitalier à ${new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})}.</textarea></div><div class="field"><label>Nom / signature (RP)</label><input id="bSignature"></div></div><div class="actions" style="margin-top:12px"><button class="btn" onclick="print()">Imprimer le bilan complet</button></div>`;
+return ''}
+function surveillanceHTML(s,i){return `<div class="card" style="margin:10px 0;background:#0c1a27"><div class="section-title">SURVEILLANCE N° ${i+1}</div><div class="formgrid four">${[['Horaire','time'],['Fréquence respiratoire (mvt/min)','text'],['SpO₂ (%)','text'],['Amplitude / régularité respiratoire','text'],['Fréquence cardiaque (BPM)','text'],['Tension artérielle','text'],['TRC','text'],['Amplitude / régularité cardiaque','text'],['Glasgow (3–15)','number'],['Température','text'],['Glycémie','text']].map((a,j)=>`<div class="field"><label>${a[0]}</label><input data-surv="${i}" data-name="${a[0]}" type="${a[1]}" value="${esc(s[a[0]]||'')}"></div>`).join('')}</div></div>`}
+function addSurveillance(id){if(!canCare()){alert('Accès refusé pour ce rôle.');return}let p=pecs.find(x=>x.id===id);p.bilan.surveillance=p.bilan.surveillance||[{}];p.bilan.surveillance.push({});saveAll();activeBilan='S';renderBilan(p)}
+function loadBilanValues(p){let b=p.bilan||{};let section=b[activeBilan]||{};Object.entries(section).forEach(([id,val])=>{let el=$('#'+id);if(el)el.value=val});let checks=section.checks||{};document.querySelectorAll('#bilanForm input[type=checkbox]').forEach(el=>{el.checked=(checks[el.dataset.group]||[]).includes(el.value)});if(section.radio){let el=document.querySelector(`input[name="bTRC"][value="${CSS.escape(section.radio)}"]`);if(el)el.checked=true}if(activeBilan==='S'){(b.surveillance||[]).forEach((s,i)=>Object.entries(s).forEach(([k,v])=>{let el=[...document.querySelectorAll(`[data-surv="${i}"]`)].find(x=>x.dataset.name===k);if(el)el.value=v}));}}
+function saveBilan(id){if(!canCare()){alert('Accès refusé pour ce rôle.');return}let p=pecs.find(x=>x.id===id),k=activeBilan,section={};document.querySelectorAll('#bilanForm input:not([type=checkbox]):not([type=radio]),#bilanForm textarea,#bilanForm select').forEach(el=>{if(el.id)section[el.id]=el.value});let checks={};document.querySelectorAll('#bilanForm input[type=checkbox]:checked').forEach(el=>(checks[el.dataset.group]??=[]).push(el.value));section.checks=checks;let radio=document.querySelector('input[name="bTRC"]:checked');if(radio)section.radio=radio.value;
+if(k==='CI'&&['CI Sécurité'].some(g=>(checks[g]||[]).length)&&!$('#bSafety').value.trim()){alert('La justification de sécurité est obligatoire si une case est cochée.');return}
+if(k==='S'){p.bilan.outcomeNotes=$('#bOutcomeNotes')?.value||'';p.bilan.surveillance=[...document.querySelectorAll('[data-surv]')].reduce((arr,el)=>{let i=+el.dataset.surv;arr[i]=arr[i]||{};arr[i][el.dataset.name]=el.value;return arr},[]);p.bilan.S=section}
+else p.bilan[k]=section;
+saveAll();alert('Rubrique enregistrée.');renderBilan(p)}
+function calcGlasgow(){let a=+($('#gEye')?.value||0),b=+($('#gMotor')?.value||0),c=+($('#gVerbal')?.value||0);$('#gTotal').value=a&&b&&c?a+b+c:''}
+function profilesPage(){if(!canAdmin()){go('home');return}$('#content').innerHTML=`<div class="grid"><div class="card span-4"><h3>CRÉER UN PROFIL</h3><div class="formgrid"><div class="field full"><label>Nom affiché</label><input id="newName"></div><div class="field full"><label>Identifiant</label><input id="newUser"></div><div class="field full"><label>Mot de passe de démonstration</label><input id="newPass" type="password"></div><div class="field full"><label>Habilitation</label><select id="newRole">${roles.map(r=>`<option>${r}</option>`).join('')}</select></div><div class="full"><button class="btn primary" onclick="createProfile()">Créer le profil</button></div></div></div><div class="card span-8"><h3>PROFILS ENREGISTRÉS</h3><div class="tablewrap"><table><thead><tr><th>Nom</th><th>Identifiant</th><th>Rôle</th><th>Action</th></tr></thead><tbody>${users.map(u=>`<tr><td>${esc(u.name)}</td><td>${esc(u.user)}</td><td>${esc(u.role)}</td><td>${u.id!==current.id?`<button class="btn small danger" onclick="removeProfile(${u.id})">Révoquer</button>`:'<span class="tag">Session active</span>'}</td></tr>`).join('')}</tbody></table></div></div></div>`}
+function createProfile(){if(!canAdmin()){alert('Accès réservé à l’administrateur.');return}let name=$('#newName').value.trim(),user=$('#newUser').value.trim(),pass=$('#newPass').value,role=$('#newRole').value;if(!name||!user||!pass){alert('Tous les champs sont obligatoires.');return}if(users.some(u=>u.user.toLowerCase()===user.toLowerCase())){alert('Cet identifiant existe déjà.');return}users.push({id:Date.now(),name,user,pass,role});auditEvent('Création de profil','Accès',user,'Rôle : '+role);saveAll();profilesPage()}
+function removeProfile(id){if(!canAdmin()||id===current.id)return;if(confirm('Révoquer ce profil ?')){const revoked=users.find(u=>u.id===id);users=users.filter(u=>u.id!==id);auditEvent('Révocation de profil','Accès',id,'Rôle : '+(revoked?.role||''));saveAll();profilesPage()}}
+function notificationsPage(){$('#content').innerHTML=`<div class="card"><h3>NOTIFICATIONS DE SERVICE</h3>${notifications.map(n=>`<div class="notice" style="margin:8px 0">${esc(n.text)} <small>— ${esc(n.date)}</small></div>`).join('')||'<p class="muted">Aucune notification.</p>'}<button class="btn small" onclick="notifications=[];saveAll();go('notifications')">Effacer les notifications</button></div>`}
+
+const medicationCatalog = [["Immunosuppresseur", "Diminue l’activité immunitaire", "Ciclosporine, tacrolimus, azathioprine, mycophénolate, méthotrexate (selon indication)", "Infections, atteinte rénale ou hépatique, troubles sanguins; risques propres à chaque molécule.", "Prévention du rejet de greffe ou maladies auto-immunes sélectionnées; suivi spécialisé indispensable.", "Orale; IV pour certaines molécules; formes locales selon produit.", "N4"], ["Anticonvulsivant / antiépileptique", "Réduit la survenue des crises épileptiques", "Lévétiracétam, lamotrigine, valproate, carbamazépine", "Somnolence, vertiges, troubles de l’équilibre; réactions cutanées graves ou atteintes hépatiques possibles selon molécule.", "Épilepsie; certains produits dans des douleurs neuropathiques ou troubles de l’humeur. Choix individualisé.", "Orale; IV pour certaines molécules; rectale pour quelques présentations d’urgence.", "N3–N4"], ["Hypotenseur / antihypertenseur", "Abaisse la pression artérielle", "Ramipril, amlodipine, losartan, bisoprolol", "Hypotension, vertiges; toux/atteinte rénale ou hyperkaliémie pour certains; bradycardie pour bêtabloquants.", "Hypertension et certaines maladies cardiaques/rénales, après évaluation clinique.", "Orale; IV en milieu hospitalier pour certaines situations.", "N3"], ["Hypertenseur / vasopresseur", "Augmente ou maintient la pression artérielle", "Noradrénaline, adrénaline (selon indication), phényléphrine", "Troubles du rythme, ischémie, extravasation et atteintes tissulaires; surveillance rapprochée.", "Hypotension sévère ou choc dans un environnement médical monitoré; jamais pour un usage autonome.", "IV en perfusion; autres voies selon urgence et produit.", "N4"], ["Antalgique / analgésique", "Diminue la douleur", "Paracétamol, ibuprofène, tramadol, morphine", "Atteinte hépatique en surdosage (paracétamol); risques digestifs/rénaux (AINS); somnolence, dépendance et dépression respiratoire (opioïdes).", "Douleur légère à sévère selon évaluation; opioïdes réservés aux indications encadrées.", "Orale; IV; rectale; transdermique ou autres selon molécule.", "N1–N4"], ["Antipyrétique", "Fait baisser la fièvre", "Paracétamol; ibuprofène (également AINS)", "Atteinte hépatique en surdosage; risques digestifs/rénaux et allergiques pour AINS.", "Fièvre inconfortable; rechercher la cause et consulter si signes d’alerte ou fièvre persistante.", "Orale; rectale; IV en milieu de soins selon produit.", "N1–N2"], ["Anti-inflammatoire", "Réduit l’inflammation", "Ibuprofène, naproxène, diclofénac; prednisone (corticoïde)", "AINS: ulcère/hémorragie digestive, atteinte rénale et risque cardiovasculaire; corticoïdes: infections, hyperglycémie, fragilité osseuse.", "Affections inflammatoires ou douleurs inflammatoires; choix selon terrain et contre-indications.", "Orale; cutanée; rectale; injectable selon molécule.", "N1–N4"], ["Anticoagulant", "Freine la coagulation", "Apixaban, rivaroxaban, warfarine, héparines", "Hémorragies, anémie; interactions et nécessité de surveillance pour certains traitements.", "Prévention/traitement de thromboses ou embolies, fibrillation atriale selon cas; prescription et suivi.", "Orale; sous-cutanée; IV pour certaines héparines.", "N4"], ["Antiagrégant plaquettaire", "Limite l’agrégation des plaquettes", "Aspirine faible dose, clopidogrel, prasugrel", "Saignements, hématomes, irritation ou ulcère digestif; réactions allergiques rares.", "Prévention secondaire d’événements artériels et après certains gestes coronaires.", "Orale; IV pour quelques agents hospitaliers.", "N3–N4"], ["Anxiolytique", "Réduit l’anxiété aiguë", "Hydroxyzine, lorazépam, diazépam", "Somnolence, troubles de vigilance; benzodiazépines: tolérance, dépendance et risque respiratoire avec dépresseurs.", "Anxiété sévère ou situation ciblée après évaluation; benzodiazépines généralement limitées dans le temps.", "Orale; IV/IM pour indications médicales spécifiques.", "N2–N4"], ["Antidépresseur", "Traite les symptômes dépressifs et certains troubles anxieux", "Sertraline, fluoxétine, escitalopram, venlafaxine", "Nausées, troubles du sommeil, effets sexuels; syndrome sérotoninergique et risque de saignement/interactions.", "Épisode dépressif ou trouble anxieux diagnostiqué; effet progressif et suivi clinique.", "Orale; formes particulières selon molécule.", "N3"], ["Bronchodilatateur", "Ouvre les bronches", "Salbutamol, terbutaline, ipratropium, tiotropium", "Tremblements, palpitations; sécheresse buccale; hypokaliémie possible avec bêta-2 agonistes à forte exposition.", "Asthme ou BPCO selon le médicament; distinguer traitement de secours et traitement de fond.", "Inhalée; nébulisée; orale/IV pour rares indications.", "N1–N3"], ["Diurétique", "Augmente l’élimination rénale d’eau et de sel", "Furosémide, hydrochlorothiazide, spironolactone", "Déshydratation, hypotension, troubles du sodium/potassium; atteinte rénale.", "Œdèmes, insuffisance cardiaque ou hypertension selon type; surveillance biologique parfois nécessaire.", "Orale; IV pour certaines situations aiguës.", "N3–N4"], ["Antiémétique", "Prévient ou soulage les nausées/vomissements", "Ondansétron, métoclopramide, dompéridone", "Constipation, céphalées; troubles du rythme (QT) ou effets neurologiques selon molécule.", "Nausées liées à certaines maladies ou traitements; identifier la cause et les risques cardiaques/neurologiques.", "Orale; buccale; IV/IM ou rectale selon produit.", "N2–N3"], ["Laxatif", "Facilite l’évacuation des selles", "Macrogol, lactulose, bisacodyl, séné", "Ballonnements, diarrhée, crampes; déshydratation et troubles électrolytiques en usage inadapté.", "Constipation après recherche de signes d’alerte; mesures hygiéno-diététiques et durée adaptée.", "Orale; rectale.", "N1–N2"], ["Antidiabétique", "Abaisse la glycémie", "Metformine, gliclazide, empagliflozine, insulines", "Hypoglycémie (notamment insuline/sulfamides), troubles digestifs; risques spécifiques rénaux ou métaboliques.", "Diabète de type 2 ou type 1 selon classe; adaptation au profil et suivi glycémique.", "Orale; sous-cutanée (insuline et certains injectables).", "N3–N4"], ["Hypolipémiant", "Diminue cholestérol ou triglycérides", "Atorvastatine, rosuvastatine, ézétimibe, fénofibrate", "Douleurs musculaires, anomalies hépatiques; interactions selon molécule.", "Dyslipidémie et réduction du risque cardiovasculaire selon niveau de risque.", "Orale; injectable pour certaines biothérapies.", "N3"], ["Antispasmodique", "Diminue les spasmes des muscles lisses", "Phloroglucinol, butylhyoscine (selon disponibilité)", "Réactions allergiques; sécheresse buccale, troubles visuels ou rétention urinaire pour anticholinergiques.", "Douleurs spasmodiques digestives, urinaires ou gynécologiques après exclusion d’une urgence.", "Orale; rectale; injectable selon produit.", "N1–N2"], ["Antiacide", "Neutralise l’acidité gastrique présente", "Alginate + bicarbonate, hydroxydes d’aluminium/magnésium, carbonate de calcium", "Constipation ou diarrhée; perturbations électrolytiques et interactions d’absorption.", "Brûlures d’estomac/reflux occasionnels; avis médical si symptômes fréquents ou alarmants.", "Orale (suspension, comprimé à croquer).", "N1"], ["Antisécrétoire gastrique", "Réduit la production d’acide gastrique", "Oméprazole, ésoméprazole, famotidine", "Céphalées, troubles digestifs; à long terme, risques dépendant du contexte et interactions.", "Reflux, ulcère ou prévention ciblée selon facteurs de risque; réévaluer les traitements prolongés.", "Orale; IV pour certaines situations hospitalières.", "N1–N3"], ["Antidiarrhéique", "Réduit certains symptômes de diarrhée", "Lopéramide, racécadotril, solutions de réhydratation orale", "Constipation/iléus avec lopéramide; réactions cutanées; déshydratation si réhydratation négligée.", "Diarrhée aiguë non compliquée selon produit; éviter ralentisseurs en cas de sang, forte fièvre ou suspicion d’infection invasive.", "Orale.", "N1–N2"], ["Antihistaminique", "Bloque l’action de l’histamine", "Cétirizine, loratadine, desloratadine, dexchlorphéniramine", "Somnolence (surtout anciennes générations), sécheresse buccale; effets cardiaques rares selon produit.", "Rhinite allergique, urticaire et démangeaisons; urgence médicale si gêne respiratoire/œdème de gorge.", "Orale; nasale ou oculaire pour formes locales; injectable en milieu médical.", "N1–N3"], ["Antibiotique", "Agit contre les bactéries", "Amoxicilline, azithromycine, ceftriaxone, doxycycline", "Allergies, diarrhée, interactions; résistance bactérienne si usage inadapté.", "Infection bactérienne documentée ou fortement suspectée; inutile contre les virus; prescription adaptée.", "Orale; IV/IM; locale selon indication.", "N3–N4"], ["Antiviral", "Freine la multiplication de virus ciblés", "Aciclovir, valaciclovir, oseltamivir, nirmatrelvir/ritonavir", "Troubles digestifs, céphalées; atteinte rénale ou interactions importantes selon produit.", "Certaines infections virales, avec choix dépendant du virus, du délai et des facteurs de risque.", "Orale; IV; topique selon molécule.", "N2–N4"], ["Antifongique / antimycosique", "Traite les infections dues aux champignons", "Clotrimazole, terbinafine, fluconazole, amphotéricine B", "Irritation locale; atteinte hépatique et interactions pour certains antifongiques systémiques.", "Mycoses cutanées, muqueuses ou invasives selon la molécule et le diagnostic.", "Cutanée; orale; IV; vaginale selon produit.", "N1–N4"], ["Antiparasitaire", "Agit contre certains parasites", "Albendazole, ivermectine, perméthrine, métronidazole (certains protozoaires)", "Troubles digestifs, réactions cutanées; effets neurologiques ou hépatiques selon produit.", "Parasite identifié ou fortement suspecté; traitement adapté à l’espèce et au contexte.", "Orale; cutanée; parfois IV selon agent.", "N1–N4"], ["Antiseptique", "Réduit les micro-organismes sur peau/muqueuses", "Chlorhexidine, povidone iodée, éthanol (usage cutané)", "Irritation, allergie; toxicité si mauvais site ou ingestion; certains produits incompatibles avec certaines muqueuses.", "Antisepsie cutanée ou de muqueuse uniquement si formulation adaptée; ne remplace pas un antibiotique systémique.", "Cutanée; buccale/vaginale selon formulation autorisée.", "N1–N2"], ["Hypnotique / somnifère", "Facilite l’endormissement", "Zolpidem, zopiclone, lormétazépam", "Somnolence résiduelle, chutes, amnésie; tolérance, dépendance et comportements complexes du sommeil.", "Insomnie sévère et de courte durée après évaluation; mesures non médicamenteuses prioritaires.", "Orale.", "N3–N4"], ["Neuroleptique / antipsychotique", "Traite certains symptômes psychotiques et états d’agitation", "Rispéridone, olanzapine, quétiapine, halopéridol", "Somnolence, prise de poids, troubles métaboliques, symptômes extrapyramidaux; allongement QT selon produit.", "Troubles psychotiques ou indications spécifiques; suivi psychiatrique et surveillance somatique.", "Orale; IM; formes retard injectables; IV seulement situations particulières.", "N4"], ["Thymorégulateur", "Stabilise l’humeur", "Lithium, valproate, lamotrigine, carbamazépine", "Toxicité rénale/thyroïdienne et marge thérapeutique étroite du lithium; risques hépatiques/hématologiques ou cutanés selon molécule.", "Trouble bipolaire et prévention des épisodes selon profil; bilans et suivi indispensables.", "Orale; autres voies selon molécule et contexte.", "N4"], ["Vasodilatateur", "Élargit les vaisseaux sanguins", "Trinitrine, dérivés nitrés, nicardipine, sildénafil (indications distinctes)", "Céphalées, hypotension, vertiges; interactions potentiellement graves entre nitrés et inhibiteurs PDE5.", "Angor, urgence hypertensive ou autres indications précises selon médicament; évaluation médicale.", "Sublinguale; orale; IV; transdermique selon produit.", "N3–N4"], ["Vasoconstricteur", "Rétrécit les vaisseaux", "Adrénaline, noradrénaline, oxymétazoline, phényléphrine", "Palpitations, hypertension, ischémie; congestion de rebond avec décongestionnants nasaux prolongés.", "Choc/anaphylaxie selon protocoles de soins; décongestion nasale de courte durée selon notice.", "IM (adrénaline en anaphylaxie selon protocole); IV; nasale; ophtalmique selon produit.", "N2–N4"], ["Antiarythmique", "Agit sur les troubles du rythme cardiaque", "Amiodarone, flécaïnide, adénosine, sotalol", "Bradycardie, hypotension, pro-arythmie; atteintes thyroïdienne, pulmonaire ou hépatique pour certaines molécules.", "Trouble du rythme diagnostiqué; choix selon ECG, cardiopathie et surveillance.", "Orale; IV en milieu médical.", "N4"], ["Expectorant / mucolytique", "Aide à fluidifier ou évacuer les sécrétions", "Acétylcystéine, carbocistéine, guaïfénésine (selon pays/produit)", "Troubles digestifs, réactions allergiques; bronchospasme rare.", "Certaines toux grasses/encombrements selon indication; hydratation et traitement de la cause.", "Orale; inhalée pour certaines formulations.", "N1–N2"], ["Antitussif", "Diminue le réflexe de toux", "Dextrométhorphane, butamirate; codéine dans des cadres restreints", "Somnolence, interactions; risques respiratoires et de dépendance pour opioïdes; peut masquer une cause nécessitant un diagnostic.", "Toux sèche gênante de courte durée uniquement si adaptée; éviter de supprimer une toux productive sans avis.", "Orale.", "N2–N4"], ["Myorelaxant", "Diminue certaines tensions musculaires", "Baclofène, tizanidine, dantrolène; thiocolchicoside dans indications limitées", "Somnolence, faiblesse, hypotension; atteinte hépatique ou risques neurologiques/reproductifs selon produit.", "Spasticité neurologique ou indications musculosquelettiques limitées; réévaluation et arrêt encadré.", "Orale; intrathécale pour baclofène spécialisé; autres voies selon produit.", "N3–N4"], ["Antigoutteux", "Réduit l’acide urique ou traite la crise inflammatoire", "Allopurinol, fébuxostat, colchicine", "Allergies parfois graves, atteinte hépatique; colchicine: toxicité digestive, musculaire et hématologique en cas d’exposition excessive/interactions.", "Prévention des crises par baisse de l’uricémie ou traitement d’une crise; stratégies différentes, suivi nécessaire.", "Orale; certains anti-inflammatoires utilisés lors des crises.", "N3–N4"]];
+const diseases = [
+
+["Hypertension artérielle","Cardiovasculaire","Souvent silencieuse ; parfois maux de tête, vertiges, bourdonnements d’oreilles ou gêne respiratoire à l’effort."],
+["Insuffisance cardiaque","Cardiovasculaire","Essoufflement à l’effort ou au repos, gêne en position allongée, fatigue, œdèmes des chevilles et jambes, prise de poids rapide liée à la rétention d’eau."],
+["Angine de poitrine (angor)","Cardiovasculaire","Douleur ou oppression au milieu de la poitrine déclenchée par l’effort, le froid ou le stress, pouvant irradier vers bras, mâchoire ou dos."],
+["Infarctus du myocarde","Cardiovasculaire","Douleur thoracique intense et prolongée, irradiation bras épaule mâchoire ou estomac, sueurs froides, nausées, essoufflement, angoisse."],
+["Arythmie cardiaque (ex. fibrillation atriale)","Cardiovasculaire","Palpitations, battements rapides lents ou irréguliers, essoufflement, fatigue, vertiges ou malaise."],
+["Phlébite (thrombose veineuse profonde)","Cardiovasculaire","Douleur ou lourdeur d’un mollet ou d’une jambe, gonflement d’un seul côté, chaleur locale, rougeur possible."],
+["Asthme","Respiratoire","Crises d’essoufflement, respiration sifflante, oppression thoracique et toux sèche, souvent la nuit ou à l’effort."],
+["Bronchite chronique / BPCO","Respiratoire","Toux grasse persistante avec crachats, essoufflement progressif à l’effort, fatigue et infections respiratoires fréquentes."],
+["Pneumonie","Respiratoire","Fièvre, frissons, toux sèche ou grasse, douleur thoracique à la respiration et essoufflement."],
+["Sinusite","Respiratoire et ORL","Nez bouché, écoulement nasal épais, pression au front aux joues ou aux dents supérieures, maux de tête, parfois fièvre."],
+["Migraine","Neurologie","Maux de tête pulsatiles souvent d’un côté, aggravés par lumière bruit ou mouvement, nausées ou vomissements, parfois aura visuelle ou sensitive."],
+["Épilepsie","Neurologie","Crises avec mouvements involontaires ou perte de connaissance ; crises focales ou absences, fixité du regard, automatismes, sensations inhabituelles ou confusion temporaire."],
+["Maladie de Parkinson","Neurologie","Tremblement au repos, lenteur des mouvements, raideur musculaire, troubles de l’équilibre ou de la posture."],
+["Sclérose en plaques","Neurologie","Troubles visuels, vision double, fourmillements, engourdissements, faiblesse musculaire, fatigue profonde, troubles équilibre ou coordination."],
+["Dépression caractérisée","Santé mentale","Tristesse persistante ou perte d’intérêt et de plaisir pendant au moins deux semaines, fatigue, troubles du sommeil ou de l’appétit, concentration difficile, dévalorisation."],
+["Trouble anxieux généralisé","Santé mentale","Inquiétudes excessives difficiles à contrôler, tension musculaire, irritabilité, fatigue, troubles du sommeil et agitation."],
+["Reflux gastro-œsophagien (RGO)","Digestif","Brûlures derrière le sternum, régurgitations acides, parfois toux chronique, enrouement matinal ou sensation de blocage."],
+["Ulcère gastroduodénal","Digestif","Douleurs brûlantes ou crampes dans le haut de l’abdomen, parfois la nuit ou à distance des repas, ballonnements, nausées, perte d’appétit."],
+["Gastro-entérite","Digestif","Diarrhées liquides, nausées, vomissements, crampes abdominales et parfois fièvre."],
+["Syndrome de l’intestin irritable","Digestif","Douleurs ou crampes abdominales parfois soulagées par les selles, ballonnements, alternance diarrhée et constipation."],
+["Maladie cœliaque","Digestif et métabolisme","Diarrhées chroniques ou selles grasses, douleurs abdominales, ballonnements, fatigue, perte de poids ou carences."],
+["Diabète de type 2","Métabolisme","Souvent discret ; soif importante, mictions fréquentes, fatigue, vision trouble ou cicatrisation plus lente."],
+["Hypothyroïdie","Endocrinien","Fatigue marquée, frilosité, prise de poids, constipation, peau sèche, ralentissement du rythme cardiaque ou humeur maussade."],
+["Hyperthyroïdie","Endocrinien","Nervosité, irritabilité, palpitations, intolérance à la chaleur, transpiration, amaigrissement malgré appétit, troubles du sommeil."],
+["Arthrose","Rhumatologie","Douleurs articulaires mécaniques augmentant à l’usage et diminuant au repos, raideur matinale brève, craquements, mobilité réduite."],
+["Polyarthrite rhumatoïde","Rhumatologie","Douleurs et gonflements symétriques de plusieurs articulations, raideur matinale prolongée, fatigue générale."],
+["Goutte","Rhumatologie","Début brutal d’une douleur articulaire très vive, rougeur, chaleur et gonflement, souvent à la base du gros orteil."],
+["Fibromyalgie","Rhumatologie","Douleurs musculo-squelettiques diffuses, fatigue chronique, sommeil non réparateur, difficultés cognitives et sensibilité accrue à la douleur."],
+["Grippe","Infectieux","Début soudain avec forte fièvre, frissons, courbatures, maux de tête, fatigue importante et toux sèche."],
+["Angine (infection de la gorge)","Infectieux et ORL","Douleur à la gorge et à la déglutition, amygdales rouges ou dépôts blanchâtres, fièvre, ganglions sensibles."],
+["Infection urinaire (cystite)","Uro-génital","Brûlures urinaires, envies fréquentes et pressantes, urines parfois troubles ou odorantes, gêne du bas-ventre."],
+["Eczéma (dermatite atopique)","Peau","Plaques rouges sèches ou suintantes, démangeaisons, peau épaissie ou craquelée."],
+["Psoriasis","Peau","Plaques rouges délimitées avec squames blanchâtres, souvent coudes genoux cuir chevelu ou bas du dos, démangeaisons ou atteinte des ongles."],
+["Urticaire","Peau","Plaques rouges ou rosées en relief, démangeaisons, apparition et disparition souvent rapides."],
+["Lupus érythémateux disséminé","Immunitaire","Fatigue, douleurs articulaires, éruption faciale possible, sensibilité au soleil et poussées inflammatoires variables."],
+["Lithiase rénale (calcul rénal)","Rénal","Douleur intense du flanc ou des lombes irradiant vers l’aine, agitation, nausées, parfois sang dans les urines."],
+["Anémie (ex. carence en fer)","Sang","Pâleur, fatigue, essoufflement à l’effort, vertiges, maux de tête et palpitations."],
+["Glaucome chronique à angle ouvert","Ophtalmologie","Souvent sans symptôme au début ; perte progressive de la vision périphérique puis centrale sans prise en charge."],
+["Conjonctivite","Ophtalmologie","Rougeur d’un ou des deux yeux, sensation de sable ou picotements, larmoiement ou sécrétions, paupières collées au réveil."],
+["Otite moyenne aiguë","ORL","Douleur de l’oreille, baisse temporaire de l’audition, oreille bouchée, parfois fièvre ou irritabilité."],
+["Accident vasculaire cérébral (AVC)","Neurologie et vasculaire","Apparition brutale d’une faiblesse d’un côté, trouble de la parole ou compréhension, perte de vision, trouble de l’équilibre ou céphalée inhabituelle."],
+["Artérite des membres inférieurs (AOMI)","Vasculaire","Douleur de type crampe au mollet à la marche pour une distance similaire, cédant à l’arrêt, pieds froids, pâleur ou cicatrisation lente."],
+["Péricardite aiguë","Cardiovasculaire","Douleur thoracique vive, parfois diminuée penché en avant et augmentée allongé ou à l’inspiration, parfois fièvre ou essoufflement."],
+["Varices des membres inférieurs","Vasculaire","Veines superficielles dilatées et sinueuses, jambes lourdes, démangeaisons, gonflement en fin de journée ou crampes nocturnes."],
+["Embolie pulmonaire","Respiratoire et vasculaire","Essoufflement soudain inexpliqué, douleur thoracique accentuée par l’inspiration, toux, accélération cardiaque ou malaise."],
+["Rhinite allergique","ORL et allergie","Éternuements en salves, écoulement nasal clair ou nez bouché, démangeaisons du nez des yeux ou du palais, larmoiement."],
+["Laryngite aiguë","ORL","Voix rauque ou éteinte, picotement du larynx, toux sèche ou aboyante, gêne passagère à la déglutition."],
+["Apnée obstructive du sommeil","Respiratoire et sommeil","Pauses respiratoires nocturnes, ronflements, somnolence diurne, maux de tête au réveil, fatigue et concentration réduite."],
+["Névralgie du trijumeau","Neurologie","Douleurs faciales très brèves et fulgurantes d’un côté, déclenchées parfois par toucher, mastication, brossage des dents ou air froid."],
+["Sciatique (radiculalgie)","Neurologie et locomoteur","Douleur du bas du dos ou de la fesse irradiant le long de la jambe, parfois fourmillements ou engourdissement."],
+["Trouble bipolaire","Santé mentale","Alternance d’épisodes dépressifs et d’épisodes maniaques ou hypomaniaques avec humeur élevée ou irritable, activité accrue et besoin réduit de sommeil."],
+["Trouble obsessionnel-compulsif (TOC)","Santé mentale","Pensées intrusives et récurrentes sources d’anxiété associées à des comportements répétitifs ou rituels mentaux."],
+["Pancréatite aiguë","Digestif","Douleur abdominale haute soudaine irradiant souvent dans le dos, nausées, vomissements persistants, ballonnements, parfois fièvre."],
+["Lithiase biliaire","Digestif et hépatique","Douleur sous les côtes à droite ou au creux de l’estomac, parfois nausées ou vomissements ; jaunisse, urines foncées ou selles décolorées si obstruction."],
+["Hépatite virale aiguë","Hépatique et infectieux","Fatigue, perte d’appétit, nausées, gêne abdominale à droite, parfois fièvre, jaunissement de la peau ou des yeux et urines foncées."],
+["Maladie de Crohn","Digestif et inflammatoire","Douleurs abdominales, diarrhées parfois sanglantes, fatigue, perte de poids, fièvre modérée, parfois lésions anales ou aphtes."],
+["Rectocolite hémorragique","Digestif et inflammatoire","Diarrhées fréquentes avec sang et glaires, faux besoins, envies urgentes, douleurs abdominales et fatigue."],
+["Stéatose hépatique métabolique (MASLD)","Hépatique et métabolisme","Le plus souvent silencieuse ; parfois fatigue ou gêne discrète dans la partie supérieure droite de l’abdomen."],
+["Tendinite (tendinopathie)","Locomoteur","Douleur localisée sur un tendon, accentuée par contraction ou étirement, sensibilité au toucher ou léger gonflement."],
+["Lombalgie commune","Locomoteur","Douleur ou raideur du bas du dos limitant les mouvements, parfois contractures musculaires."],
+["Ostéoporose","Osseux","Souvent silencieuse avant une fracture sur traumatisme minime ; douleur aiguë, perte de taille ou cyphose possibles après fracture vertébrale."],
+["Spondylarthrite ankylosante","Rhumatologie","Douleurs inflammatoires du bassin et du rachis, souvent nocturnes ou matinales et améliorées par le mouvement, raideur, fatigue, parfois talalgies ou uvéite."],
+["Zona","Infectieux et peau","Douleur brûlante ou hypersensibilité localisée, souvent d’un seul côté, puis vésicules groupées sur fond rouge."],
+["Herpès labial","Infectieux et peau","Picotements ou brûlures au bord des lèvres puis petites vésicules groupées, croûte et guérison en une à deux semaines."],
+["Mycose cutanée (dermatophytose)","Peau et infectieux","Plaque arrondie ou annulaire à bord rouge ou squameux, centre parfois plus clair, démangeaisons."],
+["Candidose buccale (muguet)","Infectieux et ORL","Dépôts blanchâtres dans la bouche, rougeur, brûlure ou gêne au goût et à la déglutition."],
+["Gale","Peau et infectieux","Démangeaisons souvent nocturnes, notamment entre les doigts, poignets, avant-bras, ombilic ou fesses, petites papules ou sillons."],
+["Maladie de Lyme","Infectieux","Plaque rouge qui s’élargit après morsure de tique, parfois fatigue, maux de tête ou courbatures ; atteintes articulaires ou neurologiques possibles plus tard."],
+["Insuffisance rénale chronique","Rénal","Longtemps peu symptomatique ; œdèmes, fatigue, nausées, perte d’appétit, crampes, démangeaisons ou modification des urines à un stade avancé."],
+["Pyélonéphrite aiguë","Rénal et infectieux","Fièvre élevée et frissons, douleur lombaire ou du flanc, parfois brûlures urinaires, envies fréquentes et nausées."],
+["Hémorroïdes","Digestif","Sang rouge vif, démangeaisons anales, suintement, gêne ou douleur locale, parfois tuméfaction douloureuse."],
+["Cataracte","Ophtalmologie","Baisse progressive et indolore de la vision, voile ou brouillard, éblouissement et couleurs moins vives."],
+["Dégénérescence maculaire liée à l’âge (DMLA)","Ophtalmologie","Baisse de la vision centrale, lignes droites déformées, tache floue ou sombre centrale, difficulté à lire ou reconnaître les visages."],
+["Vertige positionnel paroxystique bénin (VPPB)","ORL et équilibre","Brèves sensations rotatoires déclenchées par certains changements de position de la tête, parfois nausées."],
+["Acouphènes","ORL","Sifflements, bourdonnements ou tintements perçus sans source sonore extérieure, pouvant gêner sommeil ou concentration."],
+["Syndrome des ovaires polykystiques (SOPK)","Gynécologie et endocrinien","Cycles irréguliers ou longs, acné, pilosité accrue ou chute de cheveux, troubles de fertilité possibles, résistance à l’insuline."],
+["Endométriose","Gynécologie","Douleurs pelviennes, règles douloureuses, douleurs lors des rapports, de la défécation ou de la miction selon localisation, fatigue possible."],
+["Hyperplasie bénigne de la prostate","Urologie","Jet urinaire faible ou haché, difficulté à commencer, envies fréquentes jour et nuit, sensation de vessie incomplètement vidée."],
+["Thrombopénie","Sang","Plaquettes diminuées pouvant être associées à bleus faciles, pétéchies, saignements du nez ou des gencives, saignements prolongés."],
+["Hypercholestérolémie","Métabolisme et cardiovasculaire","Le plus souvent sans symptôme direct ; excès de cholestérol sanguin favorisant l’athérome et le risque cardiovasculaire à long terme."],
+["Apnée centrale du sommeil", "Respiratoire", "pauses respiratoires nocturnes, réveils, somnolence diurne, fatigue, céphalées matinales"],
+["Bronchiolite aiguë", "Respiratoire", "nourrisson, respiration rapide, sifflements, toux, rhinite, fièvre, difficultés alimentaires"],
+["Emphysème pulmonaire", "Respiratoire", "essoufflement progressif, toux chronique, fatigue, perte de poids"],
+["Tachycardie supraventriculaire", "Cardiovasculaire", "palpitations rapides soudaines, oppression thoracique, essoufflement, vertiges"],
+["Hypotension orthostatique", "Cardiovasculaire", "vertiges au lever, voile noir, faiblesse, malaise, baisse de tension debout"],
+["Maladie de Raynaud", "Cardiovasculaire", "doigts blancs puis bleus et rouges au froid, engourdissements, picotements"],
+["Anévrisme de l'aorte abdominale", "Cardiovasculaire", "souvent silencieux, douleur abdominale ou lombaire, masse pulsatile, douleur brutale en cas de complication"],
+["Méningite aiguë", "Neurologie", "fièvre, raideur de nuque, céphalées intenses, photophobie, vomissements, confusion"],
+["Encéphalite", "Neurologie", "fièvre, céphalées, confusion, troubles du comportement, convulsions, somnolence"],
+["Neuropathie périphérique", "Neurologie", "fourmillements, engourdissements, brûlures des mains ou pieds, faiblesse"],
+["Syndrome du canal carpien", "Neurologie", "fourmillements nocturnes pouce index majeur, douleurs de la main, perte de force"],
+["Démence à corps de Lewy", "Neurologie", "fluctuation de vigilance, hallucinations visuelles, raideur, troubles du sommeil"],
+["Schizophrénie", "Santé mentale", "hallucinations, idées délirantes, pensée désorganisée, retrait social"],
+["Trouble de la personnalité borderline", "Santé mentale", "instabilité émotionnelle et relationnelle, impulsivité, peur de l'abandon"],
+["Œsophagite", "Digestif", "douleur à la déglutition, dysphagie, brûlures rétrosternales, nausées"],
+["Gastrite", "Digestif", "brûlures épigastriques, nausées, ballonnements, satiété précoce"],
+["Diverticulite sigmoïdienne", "Digestif", "douleur abdominale gauche, fièvre, nausées, constipation ou diarrhée"],
+["Cirrhose du foie", "Digestif", "fatigue, ictère, ascite, œdèmes, ecchymoses, démangeaisons"],
+["Maladie d'Addison", "Endocrinien", "fatigue, hypotension, amaigrissement, envies de sel, hyperpigmentation, nausées"],
+["Syndrome de Cushing", "Endocrinien", "prise de poids tronculaire, vergetures pourpres, fragilité cutanée, hypertension, faiblesse"],
+["Bursite", "Locomoteur", "douleur près d'une articulation, gonflement, chaleur, gêne au mouvement"],
+["Entorse", "Locomoteur", "douleur après traumatisme articulaire, gonflement, ecchymose, instabilité"],
+["Fracture osseuse", "Locomoteur", "douleur osseuse aiguë, gonflement, déformation, limitation des mouvements"],
+["Lupus discoïde", "Dermatologie", "plaques rouges squameuses visage ou cuir chevelu, cicatrices, dépigmentation"],
+["Pelade", "Dermatologie", "perte de cheveux en plaques rondes lisses"],
+["Vitiligo", "Dermatologie", "taches blanches dépigmentées bien délimitées"],
+["Zona ophtalmique", "Ophtalmologie", "douleur front et œil d'un côté, vésicules, rougeur oculaire, baisse de vision"],
+["Varicelle", "Infectieux", "fièvre, fatigue, éruption de vésicules prurigineuses puis croûtes"],
+["Rougeole", "Infectieux", "forte fièvre, toux, rhinite, conjonctivite, éruption rouge du visage au corps"],
+["Rubéole", "Infectieux", "fièvre légère, ganglions cervicaux, douleurs articulaires, éruption rosée"],
+["Coqueluche", "Infectieux", "quintes de toux prolongées, inspiration bruyante, vomissements après toux"],
+["Glomérulonéphrite aiguë", "Néphrologie", "urines foncées, œdèmes du visage, hypertension, baisse des urines"],
+["Incontinence urinaire d'effort", "Urologie", "fuites urinaires lors de toux, rire, sport ou effort"],
+["Prostatite aiguë", "Urologie", "fièvre, frissons, douleurs pelviennes, brûlures urinaires, difficultés à uriner"],
+["Kyste ovarien", "Gynécologie", "douleur pelvienne unilatérale, pesanteur, ballonnements, troubles des règles"],
+["Astigmatisme", "Ophtalmologie", "vision floue ou déformée, fatigue visuelle, céphalées"],
+["Strabisme", "Ophtalmologie", "désalignement des yeux, diplopie, baisse de vision possible"],
+["Surdité de perception", "ORL", "baisse d'audition, difficulté à comprendre dans le bruit, acouphènes"],
+["Leucémie", "Hématologie", "fatigue, pâleur, fièvre, infections, ecchymoses, douleurs osseuses"],
+["Lymphome", "Hématologie", "ganglions indolores, sueurs nocturnes, fièvre, amaigrissement"],
+["Pleurésie", "Respiratoire", "douleur thoracique à l'inspiration, toux sèche, essoufflement"],
+["Pneumothorax", "Respiratoire", "douleur thoracique soudaine unilatérale, essoufflement, toux sèche"],
+["Fibrose pulmonaire", "Respiratoire", "essoufflement progressif, toux sèche persistante, fatigue, hippocratisme digital"],
+["Endocardite infectieuse", "Cardiovasculaire", "fièvre prolongée, frissons, sueurs nocturnes, souffle cardiaque, fatigue"],
+["Myocardite", "Cardiovasculaire", "douleur thoracique, essoufflement, palpitations, fatigue, malaise"],
+["Sténose aortique", "Cardiovasculaire", "dyspnée d'effort, angor, syncope à l'effort, fatigue"],
+["Ischémie aiguë d'un membre", "Cardiovasculaire", "douleur brutale membre froid et pâle, absence de pouls, fourmillements"],
+["Accident ischémique transitoire (AIT)", "Neurologie", "faiblesse brutale transitoire, trouble de parole, perte de vision temporaire"],
+["Maladie d'Alzheimer", "Neurologie", "perte de mémoire récente, désorientation, difficulté de langage et tâches familières"],
+["Sclérose latérale amyotrophique (SLA)", "Neurologie", "faiblesse et fonte musculaire progressives, fasciculations, troubles de parole"],
+["Syndrome de Guillain-Barré", "Neurologie", "fourmillements, faiblesse ascendante des jambes, réflexes diminués"],
+["Myasthénie", "Neurologie", "faiblesse fluctuante à l'effort, paupières tombantes, diplopie, dysphagie"],
+["Troubles du comportement alimentaire (anorexie mentale)", "Santé mentale", "restriction alimentaire, fatigue, frilosité, peur de prise de poids, troubles des règles"],
+["Boulimie", "Santé mentale", "crises alimentaires avec perte de contrôle, comportements compensatoires"],
+["Achalasie de l'œsophage", "Digestif", "dysphagie progressive, régurgitations, douleur thoracique"],
+["Cholécystite aiguë", "Digestif", "douleur sous côtes droites, fièvre, nausées, vomissements"],
+["Appendicite aiguë", "Digestif", "douleur migrant vers fosse iliaque droite, nausées, fièvre, perte d'appétit"],
+["Occlusion intestinale", "Digestif", "douleurs abdominales, arrêt des gaz et selles, ballonnements, vomissements"],
+["Hémochromatose", "Métabolisme", "fatigue, douleurs articulaires, peau bronzée, troubles hépatiques"],
+["Hyperparathyroïdie primaire", "Endocrinien", "fatigue, soif, urines abondantes, calculs rénaux, constipation"],
+["Acromégalie", "Endocrinien", "mains et pieds élargis, traits du visage épaissis, sueurs, céphalées"],
+["Diabète insipide", "Endocrinien", "soif intense, urines très abondantes et diluées"],
+["Syndrome du canal tarsien", "Locomoteur", "brûlures, picotements, engourdissements plante du pied"],
+["Fasciite plantaire", "Locomoteur", "douleur talon aux premiers pas du matin"],
+["Epicondylite latérale (tennis elbow)", "Locomoteur", "douleur externe du coude à la préhension ou extension du poignet"],
+["Canal lombaire étroit", "Locomoteur", "douleurs et engourdissements jambes à la marche soulagés assis"],
+["Maladie de Paget osseuse", "Locomoteur", "douleurs osseuses, déformations, fractures possibles"],
+["Rosacée", "Dermatologie", "rougeurs du visage, petits vaisseaux visibles, boutons inflammatoires"],
+["Impétigo", "Dermatologie", "lésions cutanées avec croûtes jaunâtres couleur miel"],
+["Cellulite infectieuse / Érysipèle", "Infectieux", "plaque rouge chaude douloureuse, fièvre, frissons"],
+["Mononucléose infectieuse", "Infectieux", "fatigue prolongée, fièvre, angine, ganglions cervicaux"],
+["Oreillons", "Infectieux", "fièvre, gonflement douloureux des glandes parotides, douleur à la mastication"],
+["Scarlatine", "Infectieux", "fièvre, angine, langue framboisée, éruption rugueuse"],
+["Torsion du testicule", "Urologie", "douleur scrotale brutale intense unilatérale, gonflement, nausées"],
+["Varicocèle", "Urologie", "pesanteur scrotale, veines dilatées, gêne à l'effort"],
+["Dyspareunie", "Gynécologie", "douleur génitale ou pelvienne liée aux rapports"],
+["Uvéite", "Ophtalmologie", "œil rouge douloureux, photophobie, vision floue"],
+["Décollement de la rétine", "Ophtalmologie", "éclairs lumineux, corps flottants, voile noir dans le champ visuel"],
+["Maladie de Ménière", "ORL", "crises de vertiges, acouphènes, oreille pleine, baisse auditive fluctuante"],
+["Labyrinthite", "ORL", "vertige continu, nausées, vomissements, baisse d'audition"],
+["Rétrécissement mitral", "Cardiovasculaire", "essoufflement à l'effort ou couché, palpitations, fatigue"],
+["Insuffisance mitrale", "Cardiovasculaire", "dyspnée d'effort, fatigue, palpitations, œdèmes"],
+["Rétrécissement aortique (ou sténose pulmonaire)", "Cardiovasculaire", "essoufflement d'effort, fatigue, palpitations, malaise"],
+["Dissection aortique", "Cardiovasculaire", "douleur thoracique ou dorsale brutale, malaise, déficit neurologique"],
+["Tamponnade cardiaque", "Cardiovasculaire", "dyspnée, hypotension, tachycardie, veines du cou gonflées"],
+["Artérite temporale (maladie de Horton)", "Cardiovasculaire", "céphalées temporales, douleur mâchoire à la mastication, troubles visuels"],
+["Dilatation des bronches (bronchectasie)", "Respiratoire", "toux chronique productive, crachats abondants, infections respiratoires"],
+["Abcès du poumon", "Respiratoire", "fièvre, sueurs nocturnes, toux avec crachats malodorants, amaigrissement"],
+["Épiglottite aiguë", "ORL", "fièvre brutale, douleur gorge, difficulté à avaler, voix étouffée, gêne respiratoire"],
+["Paralysie faciale périphérique (paralysie de Bell)", "Neurologie", "faiblesse brutale d'un côté du visage, œil qui ne ferme pas"],
+["Syndrome de la queue de cheval", "Neurologie", "lombalgie, anesthésie périnéale, faiblesse des jambes, troubles urinaires"],
+["Hydrocéphalie à pression normale", "Neurologie", "marche à petits pas, troubles cognitifs, incontinence urinaire"],
+["Chorée de Huntington", "Neurologie", "mouvements involontaires, troubles de coordination et cognition"],
+["Syndrome des jambes sans repos", "Neurologie", "besoin de bouger les jambes au repos le soir, sensations désagréables"],
+["Narcolepsie", "Neurologie", "somnolence diurne irrépressible, cataplexie, paralysie du sommeil"],
+["Trouble panique", "Santé mentale", "attaques de panique, palpitations, sueurs, tremblements, sensation d'étouffement"],
+["Syndrome de stress post-traumatique (TSPT)", "Santé mentale", "reviviscences, cauchemars, évitement, hypervigilance"],
+["Hernie hiatale", "Digestif", "reflux, brûlures d'estomac, régurgitations, éructations"],
+["Péritonite aiguë", "Digestif", "douleur abdominale diffuse intense, ventre rigide, fièvre, vomissements"],
+["Angiocholite aiguë", "Digestif", "douleur sous côtes droites, fièvre, frissons, ictère"],
+["Fissure anale", "Digestif", "douleur anale à la défécation, saignement rouge vif"],
+["Phéochromocytome", "Endocrinien", "poussées hypertensives, céphalées, palpitations, sueurs"],
+["Hyperaldostéronisme primaire (syndrome de Conn)", "Endocrinien", "hypertension résistante, crampes, fatigue, faiblesse"],
+["Syndrome des ovaires insuffisants (insuffisance ovarienne prématurée)", "Gynécologie", "règles irrégulières ou absentes, bouffées de chaleur, troubles du sommeil"],
+["Hernie discale cervicale", "Locomoteur", "douleur nuque irradiant bras, fourmillements, faiblesse"],
+["Capsulite rétractile de l'épaule (épaule gelée)", "Locomoteur", "douleur épaule, raideur progressive, mobilité limitée"],
+["Syndrome de Morton", "Locomoteur", "brûlure et décharge électrique à l'avant du pied"],
+["Ostéomyélite", "Locomoteur", "douleur osseuse, fièvre, rougeur, chaleur, gonflement"],
+["Maladie de Dupuytren", "Locomoteur", "nodules palmaires, flexion progressive des doigts"],
+["Dermatite séborrhéique", "Dermatologie", "plaques rouges squames grasses cuir chevelu, sourcils, nez"],
+["Pityriasis rosé de Gibert", "Dermatologie", "plaque ovale initiale puis éruption rosée squameuse du tronc"],
+["Hidradénite suppurée (maladie de Verneuil)", "Dermatologie", "nodules douloureux récidivants des plis, abcès, cicatrices"],
+["Tétanos", "Infectieux", "raideur mâchoire, difficulté à avaler, spasmes musculaires"],
+["Diphtérie", "Infectieux", "mal de gorge, fièvre, membranes grisâtres pharyngées, ganglions"],
+["Toxoplasmose", "Infectieux", "souvent asymptomatique, fièvre légère, fatigue, ganglions"],
+["Colique néphrétique infectieuse (pyélonéphrite obstructive)", "Néphrologie", "douleur lombaire intense, fièvre, frissons, troubles urinaires"],
+["Épididymite aiguë", "Urologie", "douleur scrotale progressive, gonflement, fièvre, brûlures urinaires"],
+["Bartholinite", "Gynécologie", "tuméfaction douloureuse rouge à l'entrée du vagin, gêne à la marche"],
+["Kératite", "Ophtalmologie", "œil rouge douloureux, photophobie, larmoiement, baisse visuelle"],
+["Otospongiose", "ORL", "baisse progressive de l'audition, acouphènes"],
+["Péricardite chronique constrictive", "Cardiovasculaire", "dyspnée, œdèmes, ascite, fatigue, turgescence jugulaire"],
+["Cardiomyopathie dilatée", "Cardiovasculaire", "essoufflement, fatigue, palpitations, œdèmes"],
+["Cardiomyopathie hypertrophique", "Cardiovasculaire", "dyspnée d'effort, douleur thoracique, syncope, palpitations"],
+["Insuffisance veineuse chronique", "Cardiovasculaire", "jambes lourdes, œdèmes chevilles, peau brune, démangeaisons"],
+["Œdème aigu du poumon (OAP)", "Respiratoire", "détresse respiratoire brutale, toux mousseuse, sueurs, orthopnée"],
+["Syndrome d'apnées-hypopnées obstructives du sommeil sévère", "Respiratoire", "ronflements, pauses nocturnes, somnolence sévère, céphalées matinales"],
+["Trachéobronchite aiguë", "Respiratoire", "toux sèche puis productive, brûlure rétrosternale, fatigue, fièvre"],
+["Hémorragie sous-arachnoïdienne", "Neurologie", "céphalée brutale en coup de tonnerre, vomissements, raideur nuque"],
+["Hématome sous-dural chronique", "Neurologie", "céphalées progressives, confusion, somnolence, troubles de marche"],
+["Démence fronto-temporale", "Neurologie", "changement comportement, désinhibition, apathie, troubles du langage"],
+["Maladie de Wilson", "Neurologie", "troubles hépatiques, tremblements, rigidité, troubles du comportement"],
+["Ataxie cérébelleuse", "Neurologie", "marche instable, maladresse, tremblement d'intention, troubles de coordination"],
+["Syndrome de Tourette", "Neurologie", "tics moteurs multiples et tics vocaux"],
+["Trouble déficitaire de l'attention avec ou sans hyperactivité (TDAH)", "Santé mentale", "inattention, distractibilité, impulsivité, agitation possible"],
+["Gastrite atrophique chronique", "Digestif", "gêne épigastrique, ballonnements, fatigue, carence B12"],
+["Malabsorption intestinale", "Digestif", "diarrhée chronique, selles grasses, ballonnements, carences"],
+["Syndrome de grêle court", "Digestif", "diarrhée abondante, déshydratation, carences, amaigrissement"],
+["Cholangite biliaire primitive", "Digestif", "fatigue, prurit, ictère tardif"],
+["Hypoparathyroïdie", "Endocrinien", "fourmillements autour bouche et doigts, crampes, spasmes"],
+["Insuffisance surrénalienne aiguë", "Endocrinien", "hypotension, déshydratation, douleur abdominale, confusion"],
+["Polyarthrite juvénile idiopathique", "Locomoteur", "douleur et gonflement articulaire enfant, raideur matinale"],
+["Polymyalgia rheumatica (pseudopolyarthrite rhizomélique)", "Locomoteur", "douleurs et raideurs épaules hanches le matin"],
+["Syndrome douloureux régional complexe (algodystrophie)", "Locomoteur", "douleur disproportionnée d'un membre, œdème, changement couleur, raideur"],
+["Scoliose", "Locomoteur", "asymétrie épaules, déviation colonne, gibbosité, douleur dorsale"],
+["Kératoconjonctivite sèche (œil sec)", "Ophtalmologie", "brûlure oculaire, sécheresse, grain de sable, vision fluctuante"],
+["Pemphigoïde bulleuse", "Dermatologie", "démangeaisons, grosses bulles tendues sur peau"],
+["Pemphigus vulgaire", "Dermatologie", "érosions buccales, bulles fragiles, douleurs cutanées"],
+["Folliculite", "Dermatologie", "petites pustules et papules autour des poils"],
+["Furuncle", "Dermatologie", "nodule rouge chaud douloureux centré sur un poil"],
+["Chéloïde", "Dermatologie", "cicatrice épaisse surélevée débordant la plaie"],
+["Coqueluche de l'adulte / adolescent", "Infectieux", "quintes de toux persistantes, fatigue, toux nocturne"],
+["Leptospirose", "Infectieux", "fièvre brutale, douleurs mollets, céphalées, yeux rouges"],
+["Brucellose", "Infectieux", "fièvre ondulante, sueurs, fatigue, douleurs articulaires"],
+["Syphilis primaire", "Infectieux", "ulcération indolore, ganglion local"],
+["Cystite interstitielle (syndrome de la vessie douloureuse)", "Urologie", "douleur vésicale, envies fréquentes d'uriner, nycturie"],
+["Hydrocèle", "Urologie", "gonflement scrotal généralement indolore"],
+["Prolapsus génital (descente d'organes)", "Gynécologie", "pesanteur pelvienne, boule vaginale, troubles urinaires"],
+["Rétinopathie diabétique", "Ophtalmologie", "vision floue progressive, corps flottants, baisse visuelle"],
+["Occlusion de l'artère centrale de la rétine", "Ophtalmologie", "perte de vision brutale indolore d'un œil"],
+["Presbyacousie", "ORL", "baisse auditive progressive bilatérale, compréhension difficile dans le bruit"],
+["Insuffisance tricuspidienne", "Cardiovasculaire", "fatigue, œdèmes jambes, pulsations jugulaires, ascite"],
+["Communication interauriculaire (CIA)", "Cardiovasculaire", "dyspnée d'effort, fatigue, palpitations"],
+["Syndrome de Wolff-Parkinson-White", "Cardiovasculaire", "tachycardie soudaine, palpitations, vertiges, malaise"],
+["Maladie thromboembolique veineuse récidivante (syndrome post-thrombotique)", "Cardiovasculaire", "douleur chronique jambe, œdème, peau brune, ulcère"],
+["Silicose", "Respiratoire", "dyspnée progressive, toux chronique, oppression thoracique"],
+["Asbestose", "Respiratoire", "dyspnée progressive, toux sèche, fatigue"],
+["Sarcoïdose", "Respiratoire", "toux sèche, dyspnée, fatigue, ganglions, inflammation oculaire"],
+["Hémorragie intracérébrale", "Neurologie", "déficit neurologique brutal, céphalée, vomissements, confusion"],
+["Malformation artérioveineuse cérébrale (MAV)", "Neurologie", "convulsions, céphalées, déficits neurologiques possibles"],
+["Névralgie d'Arnold (névralgie du grand occipital)", "Neurologie", "décharges douloureuses base du crâne vers arrière tête"],
+["Syndrome de Ménière bilatéral", "ORL", "vertiges, acouphènes bilatéraux, baisse auditive"],
+["Dysphorie prémenstruelle (TDPM)", "Gynécologie", "irritabilité, anxiété, variations humeur avant règles"],
+["Trouble dysphorique / Dysthymie (trouble dépressif persistant)", "Santé mentale", "humeur dépressive chronique, fatigue, troubles du sommeil"],
+["Diverticule de Zenker", "Digestif", "dysphagie, régurgitations tardives, mauvaise haleine, toux nocturne"],
+["Sténose du pylore (chez le nourrisson)", "Digestif", "vomissements en jet après repas, faim, déshydratation"],
+["Colite ischémique", "Digestif", "douleur abdominale soudaine, diarrhée sanglante"],
+["Cholangiocarcinome", "Digestif", "ictère progressif, prurit, urines foncées, amaigrissement"],
+["Hyperprolactinémie", "Endocrinien", "galactorrhée, troubles des règles, baisse libido, céphalées"],
+["Syndrome de Sheehan", "Endocrinien", "absence de lactation après accouchement, fatigue, hypotension"],
+["Rachitisme (chez l'enfant)", "Locomoteur", "douleurs osseuses, retard de croissance, déformations osseuses"],
+["Ostéomalacie (chez l'adulte)", "Locomoteur", "douleurs osseuses diffuses, faiblesse musculaire"],
+["Maladie de Scheuermann", "Locomoteur", "douleur dorsale adolescent, cyphose, raideur"],
+["Ténosynovite de De Quervain", "Locomoteur", "douleur base pouce et poignet, gonflement"],
+["Rupture de la coiffe des rotateurs", "Locomoteur", "douleur épaule, faiblesse pour lever bras"],
+["Goutte tophacée chronique", "Locomoteur", "crises articulaires, nodules tophi, déformations"],
+["Lichen plan", "Dermatologie", "papules violacées prurigineuses, lésions buccales"],
+["Acrocyanose", "Cardiovasculaire", "extrémités bleutées froides persistantes"],
+["Erythème noueux", "Dermatologie", "nodules rouges douloureux sur tibias, fièvre"],
+["Escarre (ulcère de pression)", "Dermatologie", "rougeur persistante zone d'appui, plaie de pression"],
+["Maladie de Lyme neurologique (neuroborréliose)", "Infectieux", "douleurs radiculaires, paralysie faciale, céphalées"],
+["Paludisme (accès palustre)", "Infectieux", "fièvre, frissons, sueurs, céphalées après voyage"],
+["Dengue", "Infectieux", "fièvre élevée, douleurs rétro-orbitaires, courbatures, éruption"],
+["Choléra", "Infectieux", "diarrhée aqueuse abondante, vomissements, déshydratation"],
+["Syndrome néphrotique", "Néphrologie", "œdèmes, urines mousseuses, prise de poids"],
+["Vessie hyperactive", "Urologie", "urgenturie, mictions fréquentes, nycturie, fuites"],
+["Endométrite", "Gynécologie", "douleur pelvienne, fièvre, pertes vaginales, saignements"],
+["Syndrome de congestion pelvienne", "Gynécologie", "douleur pelvienne chronique, pesanteur aggravée debout"],
+["Blépharite", "Ophtalmologie", "rougeur bord paupières, croûtes cils, irritation"],
+["Chalazion", "Ophtalmologie", "nodule ferme peu douloureux paupière"],
+["Mastoïdite aiguë", "ORL", "fièvre, douleur et gonflement derrière oreille, pavillon décollé"]
+];
+const normalizeSearch=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+function medicationsPage(){
+ if(!canDoctor()){go('home');return}
+ $('#content').innerHTML=`<div class="card"><h3>CATALOGUE PHARMACOLOGIQUE</h3><p class="muted">Référentiel documentaire RP. Les niveaux N1–N5 sont des repères internes, et non une classification réglementaire. La délivrance et les conditions réelles varient selon la spécialité, la dose et le pays.</p><div class="formgrid"><div class="field"><label>Recherche libre (molécule, catégorie, effet recherché ou effet secondaire)</label><input id="medSearch" aria-label="Rechercher un médicament" placeholder="Ex. nausées, douleur, somnolence…" oninput="renderMedications()"></div><div class="field"><label>Filtrer par niveau indicatif</label><select id="medLevel" onchange="renderMedications()"><option value="">Tous les niveaux</option>${['N1','N2','N3','N4','N5'].map(n=>`<option>${n}</option>`).join('')}</select></div></div><p class="muted" id="medCount"></p><div id="medResults"></div></div>`;
+ renderMedications();
+}
+function renderMedications(){
+ let q=normalizeSearch($('#medSearch')?.value),level=$('#medLevel')?.value;
+ let found=medicationCatalog.filter(m=>(!level||m[6].includes(level))&&(!q||normalizeSearch(m.join(' ')).includes(q)));
+ $('#medCount').setAttribute('aria-live','polite');$('#medCount').textContent=found.length+' catégorie(s) trouvée(s) sur '+medicationCatalog.length;
+ $('#medResults').innerHTML=found.map(m=>`<details class="card" style="margin:10px 0"><summary style="cursor:pointer;font-weight:700">${esc(m[0])} <span class="tag">${esc(m[6])}</span></summary><div class="tablewrap" style="margin-top:12px"><table><tbody>${['Effet recherché','Molécules (exemples)','Effets secondaires','Cas pratique / conditions d’utilisation','Voies d’administration','Niveau indicatif RP'].map((label,i)=>`<tr><th style="width:190px">${label}</th><td>${esc(m[i+1])}</td></tr>`).join('')}</tbody></table></div></details>`).join('')||'<p class="muted">Aucun résultat.</p>';
+}
+const symptomSynonyms={
+ "dyspnee":["essoufflement","gene respiratoire","difficulte a respirer"],
+ "essoufflement":["dyspnee","gene respiratoire"],
+ "cephalee":["maux de tete","mal de tete"],
+ "maux de tete":["cephalee","mal de tete"],
+ "fievre":["temperature elevee","febrile"],
+ "toux":["tousser"],
+ "fatigue":["asthenie","epuisement"],
+ "vertiges":["etourdissements","malaise"],
+ "douleur thoracique":["oppression thoracique","douleur poitrine","douleur au thorax"],
+ "douleur poitrine":["douleur thoracique","oppression thoracique"],
+ "oedeme":["gonflement","retention d eau"],
+ "gonflement":["oedeme"],
+ "nausee":["nausees","envie de vomir"],
+ "diarrhee":["selles liquides"],
+ "palpitation":["palpitations","battements irreguliers"],
+ "demangeaison":["demangeaisons","prurit"],
+ "douleur abdominale":["douleurs abdominales","mal au ventre","crampes abdominales"],
+ "mal au ventre":["douleur abdominale","crampes abdominales"],
+ "rougeur":["plaques rouges","eruption cutanee"],
+ "perte de connaissance":["malaise","syncope"],
+ "trouble de la vision":["vision trouble","baisse de vision"],
+ "mal de gorge":["douleur a la gorge","douleur gorge"],
+ "brulure urinaire":["brulures en urinant","picotements en urinant"],
+ "insomnie":["troubles du sommeil"],
+ "douleur articulaire":["douleurs articulaires"]
+};
+let selectedSymptoms=[];
+function symptomKey(s){return normalizeSearch(s).replace(/[’']/g,' ').replace(/[^a-z0-9 ]/g,' ').replace(/\s+/g,' ').trim()}
+const symptomLibrary=[...new Set(Object.values(symptomSynonyms).flat().concat(Object.keys(symptomSynonyms),diseases.flatMap(d=>d[2].split(/[,;:.()]/).map(s=>s.trim()).filter(s=>s.length>3))))].sort((a,b)=>a.localeCompare(b,'fr'));
+function addSymptom(value){
+ let term=String(value||'').trim();
+ if(!term)return;
+ if(!selectedSymptoms.some(t=>symptomKey(t)===symptomKey(term)))selectedSymptoms.push(term);
+ $('#symptomInput').value='';
+ renderSymptomChips();renderSymptomSuggestions();renderDiagnoses();
+}
+function removeSymptom(i){selectedSymptoms.splice(i,1);renderSymptomChips();renderSymptomSuggestions();renderDiagnoses()}
+function renderSymptomChips(){
+ $('#symptomChips').innerHTML=selectedSymptoms.map((t,i)=>`<button type="button" class="btn small" style="margin:3px;border-radius:22px" onclick="removeSymptom(${i})">${esc(t)} ×</button>`).join('')||'<span class="muted">Aucun symptôme ajouté.</span>';
+}
+function renderSymptomSuggestions(){
+ const q=symptomKey($('#symptomInput')?.value||'');
+ const target=$('#symptomSuggestions');if(!target)return;
+ if(!q){target.innerHTML='<span class="muted">Saisissez un symptôme : les suggestions apparaissent immédiatement.</span>';return}
+ const items=symptomLibrary.filter(x=>symptomKey(x).includes(q)&&!selectedSymptoms.some(t=>symptomKey(t)===symptomKey(x))).slice(0,8);
+ target.innerHTML=items.map(x=>`<button type="button" class="btn small" style="margin:3px" onclick="addSymptom(decodeURIComponent('${encodeURIComponent(x)}'))">+ ${esc(x)}</button>`).join('')||'<span class="muted">Aucune suggestion exacte. Vous pouvez ajouter votre propre terme.</span>';
+}
+function onSymptomKey(event){
+ if(event.key==='Enter'||event.key===','||event.key===';'){event.preventDefault();addSymptom($('#symptomInput').value)}
+}
+function diagnosesRank(){
+ const pending=$('#symptomInput')?.value?.trim()||'';
+ const terms=[...selectedSymptoms,...(pending?[pending]:[])].map(symptomKey).filter(x=>x.length>1);
+ if(!terms.length)return [];
+ return diseases.map((d,i)=>{
+  const hay=symptomKey(d[0]+' '+d[2]);
+  const hits=terms.filter(t=>{
+   let candidates=[t,...(symptomSynonyms[t]||[]).map(symptomKey)];
+   return candidates.some(c=>c.length>2&&hay.includes(c));
+  });
+  return {d,i,hits,score:hits.length};
+ }).filter(x=>x.score).sort((a,b)=>b.score-a.score||a.d[0].localeCompare(b.d[0],'fr'));
+}
+function diagnosticsPage(){
+ if(!canDoctor()){go('home');return}
+ selectedSymptoms=[];
+ $('#content').innerHTML=`<div class="card"><h3>EXPLORATEUR DE SYMPTÔMES · RP</h3><p class="muted">Suggestions instantanées issues des 80 fiches de pathologies. Classement par nombre de correspondances textuelles : ce n'est ni une probabilité ni un diagnostic.</p>
+ <div class="field"><label>Ajouter un symptôme</label><input id="symptomInput" aria-label="Saisir un symptôme" autocomplete="off" placeholder="Tapez : toux, fièvre, vertiges…" oninput="renderSymptomSuggestions();renderDiagnoses()" onkeydown="onSymptomKey(event)"><div id="symptomSuggestions" style="margin:8px 0"></div><div class="actions"><button class="btn small" onclick="addSymptom($('#symptomInput').value)">+ Ajouter ce symptôme</button><button class="btn small" onclick="selectedSymptoms=[];$('#symptomInput').value='';renderSymptomChips();renderSymptomSuggestions();renderDiagnoses()">Effacer tout</button></div></div>
+ <div class="field"><label>Symptômes retenus (cliquer pour retirer)</label><div id="symptomChips"></div></div>
+ <div class="formgrid"><div class="field"><label>Filtrer les résultats par spécialité</label><select id="diagSpecialty" onchange="renderDiagnoses()"><option value="">Toutes les spécialités</option>${[...new Set(diseases.map(d=>d[1]))].sort().map(x=>`<option value="${esc(x)}">${esc(x)}</option>`).join('')}</select></div><div class="field"><label>Afficher</label><select id="diagLimit" onchange="renderDiagnoses()"><option value="10">10 propositions</option><option value="25">25 propositions</option><option value="80">Toutes les propositions</option></select></div></div>
+ <h3>PROPOSITIONS EN TEMPS RÉEL</h3><p class="muted" id="diagCount"></p><div id="diagResults"></div>
+ <hr><h3>VALIDATION MÉDICALE RP</h3><div class="formgrid"><div class="field"><label>Patient</label><select id="diagPatient"><option value="">Sélectionner un dossier</option>${patients.map(p=>`<option value="${p.id}">${esc(patientName(p))} — ${esc(p.dob)}</option>`).join('')}</select></div><div class="field"><label>Hypothèse modifiable</label><input id="diagHypothesis" placeholder="Sélectionner une piste ou saisir librement"></div><div class="field full"><label>Observations / justification</label><textarea id="diagComment" placeholder="Observations du médecin…"></textarea></div><div class="field"><label>Décision</label><select id="diagStatus"><option>À examiner</option><option>Validée par le médecin (RP)</option><option>Écartée par le médecin (RP)</option></select></div><div class="field" style="justify-content:end"><button class="btn primary" onclick="saveDiagnostic()">Enregistrer dans le dossier</button></div></div></div>`;
+ renderSymptomChips();renderSymptomSuggestions();renderDiagnoses();
+}
+function renderDiagnoses(){
+ const matches=diagnosesRank();
+ const specialty=$('#diagSpecialty')?.value||'';
+ const filtered=matches.filter(x=>!specialty||x.d[1]===specialty);
+ const limit=Number($('#diagLimit')?.value||10);
+ const terms=[...selectedSymptoms,...($('#symptomInput')?.value?.trim()||''?[ $('#symptomInput').value.trim() ]:[])];
+ $('#diagCount').setAttribute('aria-live','polite');$('#diagCount').textContent=terms.length?`${filtered.length} correspondance(s) sur ${diseases.length} pathologies · actualisation à chaque saisie.`:`${diseases.length} pathologies disponibles. Commencez à taper pour afficher les propositions.`;
+ $('#diagResults').innerHTML=filtered.slice(0,limit).map(({d,i,hits,score})=>`<div class="card" style="margin:8px 0"><div class="actions" style="justify-content:space-between;align-items:center"><b>${esc(d[0])}</b><span class="tag">${score}/${terms.length} terme(s) retrouvé(s)</span></div><p class="muted">${esc(d[1])}</p><p>${esc(d[2])}</p><p class="muted">Correspondances : ${hits.map(esc).join(' · ')}</p><button class="btn small" onclick="chooseDiagnosis(${i})">Retenir comme hypothèse RP</button></div>`).join('')||'<p class="muted">Aucune correspondance. Essayez un autre terme ou un synonyme.</p>';
+}
+function chooseDiagnosis(i){if(!canDoctor())return;$('#diagHypothesis').value=diseases[i][0];$('#diagHypothesis').focus()}
+function saveDiagnostic(){
+ if(!canDoctor())return;
+ let id=Number($('#diagPatient').value),p=patients.find(x=>x.id===id);
+ if(!p){alert('Sélectionnez un patient pour enregistrer une piste.');return}
+ let hypothesis=$('#diagHypothesis').value.trim();
+ if(!hypothesis){alert('Renseignez une hypothèse.');return}
+ p.diagnosticHistory=p.diagnosticHistory||[];
+ p.diagnosticHistory.push({date:new Date().toLocaleString('fr-FR'),symptoms:[...selectedSymptoms,...($('#symptomInput')?.value?.trim()?[ $('#symptomInput').value.trim() ]:[])].join(', '),hypothesis,comment:$('#diagComment').value,status:$('#diagStatus').value,doctor:current.name});
+ saveAll();alert('Piste enregistrée dans le dossier RP du patient.');
+}
+
+
+const originalPatientDetail=patientDetail;
+patientDetail=function(id){
+ originalPatientDetail(id);
+ let p=patients.find(x=>x.id===id);
+ if(!p||!canDoctor()||!$('#content'))return;
+ let entries=p.diagnosticHistory||[];
+ $('#content').insertAdjacentHTML('beforeend',`<div class="card" style="margin-top:12px"><h3>HISTORIQUE DES PISTES MÉDICALES RP</h3>${entries.length?entries.slice().reverse().map(x=>`<p><b>${esc(x.hypothesis)}</b> <span class="tag">${esc(x.status)}</span><br><span class="muted">${esc(x.date)} · ${esc(x.doctor)} · Symptômes : ${esc(x.symptoms)} · ${esc(x.comment)}</span></p>`).join(''):'<p class="muted">Aucune piste enregistrée.</p>'}<button class="btn small" onclick="go('diagnostics')">Ouvrir la recherche de symptômes</button></div>`);
+};
+
+const sess=sessionStorage.getItem('lethe_session');if(sess){let u=users.find(x=>String(x.id)===sess);if(u){current=u;showApp()}}
+saveAll();
+</script>
+</body></html>
